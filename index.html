@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="学府膳智 — 智慧食堂管理平台，为师生提供科学配餐、营养分析与评价互动服务。">
+  <title>学府膳智 — 智慧校园食堂管理平台</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&family=Liu+Jian+Mao+Cao&family=Zhi+Mang+Xing&family=Long+Cang&family=ZCOOL+QingKe+HuangYou&family=Noto+Serif+SC:wght@700&family=Kalam:wght@700&family=Pacifico&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header class="site-header">
+    <div class="nav-inner">
+
+      <a href="#" class="nav-brand" aria-label="学府膳智 首页">
+        <!-- Logo: bowl/fork icon -->
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.84 0-16-7.16-16-16S15.16 8 24 8s16 7.16 16 16-7.16 16-16 16z"/>
+          <path d="M24 12c-1.1 0-2 .9-2 2v8c0 .74.4 1.38 1 1.73V34c0 .55.45 1 1 1s1-.45 1-1V23.73c.6-.35 1-.99 1-1.73v-8c0-1.1-.9-2-2-2z"/>
+          <circle cx="18" cy="18" r="2"/>
+          <circle cx="30" cy="18" r="2"/>
+          <path d="M15 24c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3v-1H15v1z"/>
+        </svg>
+        学府膳智
+      </a>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#">首页</a>
+        <a href="#featured">今日食谱</a>
+        <a href="#trending">热门菜品</a>
+        <a href="#announcements">公告中心</a>
+        <a href="#footer">关于我们</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn-login" id="btn-open-auth">
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span class="btn-login-text">登录</span>
+        </button>
+
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换明暗主题">
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="打开菜单">
+          <span></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#">首页</a>
+    <a href="#featured">今日食谱</a>
+    <a href="#trending">热门菜品</a>
+    <a href="#announcements">公告中心</a>
+    <a href="#footer">关于我们</a>
+  </div>
+
+
+  <main>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+      <div class="container">
+        <h1 class="hero-title reveal" id="hero-title">
+          <span class="hero-char" data-char="学">学</span>
+          <span class="hero-char" data-char="府">府</span>
+          <span class="hero-char" data-char="膳">膳</span>
+          <span class="hero-char" data-char="智">智</span>
+        </h1>
+        <p class="hero-subtitle reveal" style="--delay:.15s">
+          <span class="hero-typing">
+            <span id="typing-text"></span><span class="cursor"></span>
+          </span>
+        </p>
+      </div>
+    </section>
+
+
+    <!-- ========== FEATURED GRID — ROW 1 (7+5) ========== -->
+    <section id="featured">
+      <div class="container">
+
+        <div class="card-grid card-grid--hero">
+
+          <!-- Card 1: Large left -->
+          <article class="card reveal" style="--delay:0s">
+            <div class="card-media card-media--ar-7-8">
+              <img loading="lazy" alt="色彩丰富的午餐套餐，摆盘精致"
+                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">每日推荐</a>
+                <span class="sep">–</span>
+                <a href="#">午餐</a>
+              </div>
+              <h3 class="card-title"><a href="#">今日特色套餐：红烧排骨 & 时蔬拼盘</a></h3>
+              <p class="card-excerpt">精选优质猪排搭配当季新鲜蔬菜，营养均衡，口味鲜美，是今日最受师生欢迎的人气套餐。</p>
+            </div>
+          </article>
+
+          <!-- Card 2: Right top -->
+          <article class="card reveal" style="--delay:.1s">
+            <div class="card-media card-media--ar-16-9">
+              <img loading="lazy" alt="营养分析数据图表"
+                src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">营养分析</a>
+                <span class="sep">–</span>
+                <a href="#">健康指南</a>
+              </div>
+              <h3 class="card-title"><a href="#">本周营养配餐报告</a></h3>
+              <p class="card-excerpt">根据学生成长需求科学配比蛋白质、碳水化合物和膳食纤维，守护每一份成长能量。</p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========== FEATURED GRID — ROW 2 (1x3) ========== -->
+    <section>
+      <div class="container">
+
+        <div class="card-grid card-grid--trio">
+
+          <article class="card reveal" style="--delay:0s">
+            <div class="card-media card-media--ar-16-9">
+              <img loading="lazy" alt="学生在食堂就餐的温馨场景"
+                src="https://images.unsplash.com/photo-1567521464027-f127ff144326?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags"><a href="#">学生评价</a></div>
+              <h3 class="card-title"><a href="#">学生满意度调查结果公布</a></h3>
+              <p class="card-excerpt">超过 92% 的同学对本月食谱表示满意，红烧鸡腿蝉联最受欢迎菜品。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.1s">
+            <div class="card-media card-media--ar-16-9">
+              <img loading="lazy" alt="新鲜的蔬菜水果原材料"
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">食材溯源</a>
+                <span class="sep">–</span>
+                <a href="#">安全保障</a>
+              </div>
+              <h3 class="card-title"><a href="#">食材从农场到餐桌的旅程</a></h3>
+              <p class="card-excerpt">每一批食材均可扫码溯源，从采购、检验到烹饪，全流程透明可查。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.2s">
+            <div class="card-media card-media--ar-4-3">
+              <img loading="lazy" alt="厨师团队合影"
+                src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags"><a href="#">厨师风采</a></div>
+              <h3 class="card-title"><a href="#">幕后英雄：我们的大厨团队</a></h3>
+              <p class="card-excerpt">15 位专业厨师用心烹饪每一道菜，让校园美食不输家的味道。</p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========== FEATURED GRID — ROW 3 (6+6) ========== -->
+    <section>
+      <div class="container">
+
+        <div class="card-grid card-grid--duo">
+
+          <article class="card reveal" style="--delay:0s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="色彩斑斓的甜品展示"
+                src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">甜品站</a>
+                <span class="sep">–</span>
+                <a href="#">下午茶</a>
+              </div>
+              <h3 class="card-title"><a href="#">新增甜品窗口正式营业</a></h3>
+              <p class="card-excerpt">手工蛋糕、鲜果酸奶、红豆双皮奶……课后的小确幸，现在从食堂开始。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.1s">
+            <div class="card-media card-media--ar-16-9">
+              <img loading="lazy" alt="食堂投票界面展示"
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">投票评价</a>
+                <span class="sep">–</span>
+                <a href="#">互动</a>
+              </div>
+              <h3 class="card-title"><a href="#">下周食谱由你做主！</a></h3>
+              <p class="card-excerpt">参与每周线上投票，选出你最想吃的菜品，让食堂的味道更贴近你的口味。</p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========== TRENDING ========== -->
+    <section class="trending" id="trending">
+
+      <div class="container">
+        <div class="section-header reveal">
+          <h2 class="section-title">热门菜品</h2>
+          <p class="section-desc">本周最受欢迎的人气美食</p>
+        </div>
+      </div>
+
+      <div class="swiper-container">
+        <div class="swiper-track">
+
+          <article class="card reveal" style="--delay:0s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="糖醋里脊"
+                src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">热门</a>
+                <span class="sep">–</span>
+                <a href="#">中式</a>
+              </div>
+              <h3 class="card-title"><a href="#">糖醋里脊</a></h3>
+              <p class="card-excerpt">外酥里嫩，酸甜可口，每日限量供应，先到先得。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.1s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="番茄意面"
+                src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">人气</a>
+                <span class="sep">–</span>
+                <a href="#">西式</a>
+              </div>
+              <h3 class="card-title"><a href="#">经典番茄意面</a></h3>
+              <p class="card-excerpt">浓郁的番茄酱搭配劲道意面，简单却让人欲罢不能。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.2s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="日式寿司拼盘"
+                src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">特色</a>
+                <span class="sep">–</span>
+                <a href="#">日式</a>
+              </div>
+              <h3 class="card-title"><a href="#">精选寿司拼盘</a></h3>
+              <p class="card-excerpt">新鲜食材现做现卖，每一口都是对品质的承诺。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.3s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="水果沙拉"
+                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags">
+                <a href="#">健康</a>
+                <span class="sep">–</span>
+                <a href="#">轻食</a>
+              </div>
+              <h3 class="card-title"><a href="#">缤纷水果沙拉</a></h3>
+              <p class="card-excerpt">多种时令水果搭配酸奶酱，清爽低卡，是减脂期的最佳伙伴。</p>
+            </div>
+          </article>
+
+          <article class="card reveal" style="--delay:.4s">
+            <div class="card-media card-media--ar-5-6">
+              <img loading="lazy" alt="红烧牛腩"
+                src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&q=80">
+            </div>
+            <div class="card-body">
+              <div class="card-tags"><a href="#">经典</a></div>
+              <h3 class="card-title"><a href="#">秘制红烧牛腩</a></h3>
+              <p class="card-excerpt">慢炖三小时的浓香牛腩，配上一碗热气腾腾的白米饭，治愈一整天的疲惫。</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="swiper-nav">
+          <button type="button" class="swiper-btn swiper-prev" aria-label="上一页">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button type="button" class="swiper-btn swiper-next" aria-label="下一页">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ========== ANNOUNCEMENTS (Latest Stories) ========== -->
+    <section class="stories" id="announcements">
+
+      <div class="container">
+        <div class="section-header reveal">
+          <h2 class="section-title">最新公告</h2>
+          <p class="section-desc">食堂最新动态与通知</p>
+        </div>
+      </div>
+
+      <a href="#" class="story-item reveal">
+        <div class="story-inner">
+          <h3 class="story-title">关于食堂 · 学府膳智</h3>
+          <div class="story-desc">一个致力于让校园饮食更健康、更透明的智慧管理平台。</div>
+          <div class="story-preview">
+            <img loading="lazy" alt="学校食堂全景"
+              src="https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&q=75">
+          </div>
+          <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="#" class="story-item reveal" style="--delay:.05s">
+        <div class="story-inner">
+          <h3 class="story-title">本周食谱更新通知</h3>
+          <div class="story-desc">新增三款地方特色菜品，周三起供应。</div>
+          <div class="story-preview">
+            <img loading="lazy" alt="新菜品展示"
+              src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=75">
+          </div>
+          <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="#" class="story-item reveal" style="--delay:.1s">
+        <div class="story-inner">
+          <h3 class="story-title">食品安全月度报告</h3>
+          <div class="story-desc">三月份食材检测全部合格，查看详细数据。</div>
+          <div class="story-preview">
+            <img loading="lazy" alt="食品检测报告"
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=75">
+          </div>
+          <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="#" class="story-item reveal" style="--delay:.15s">
+        <div class="story-inner">
+          <h3 class="story-title">学生投票通道已开放</h3>
+          <div class="story-desc">为下周菜单投票，让你最爱的菜品上线。</div>
+          <div class="story-preview">
+            <img loading="lazy" alt="投票界面"
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=75">
+          </div>
+          <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+
+      <a href="#" class="story-item reveal" style="--delay:.2s">
+        <div class="story-inner">
+          <h3 class="story-title">厨艺大赛报名开始</h3>
+          <div class="story-desc">师生同台竞技，用创意烹出最美味的佳肴。</div>
+          <div class="story-preview">
+            <img loading="lazy" alt="厨艺大赛海报"
+              src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&q=75">
+          </div>
+          <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="site-footer" id="footer">
+    <div class="container">
+
+      <div class="footer-brand" aria-hidden="true">
+        <span>学</span>
+        <span>府</span>
+        <span>膳</span>
+        <span>智</span>
+        <span>!</span>
+      </div>
+
+      <nav class="footer-links" aria-label="页脚导航">
+        <a href="#">首页</a>
+        <a href="#">今日食谱</a>
+        <a href="#">营养分析</a>
+        <a href="#">投票评价</a>
+        <a href="#">管理后台</a>
+        <a href="#">使用条款</a>
+      </nav>
+
+      <p class="footer-copy">
+        © 2026 学府膳智 · 智慧校园食堂管理平台<br>
+        本站由学校信息技术社团用热爱与代码驱动搭建。
+      </p>
+
+    </div>
+  </footer>
+
+  <!-- ========== AUTH MODAL ========== -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-modal">
+
+      <button type="button" class="auth-close" id="auth-close" aria-label="关闭">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="auth-header">
+        <h2 class="auth-title">欢迎来到学府膳智</h2>
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" data-tab="login">登录</button>
+          <button type="button" class="auth-tab" data-tab="register">注册</button>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="form-login">
+        <div class="auth-role-select">
+          <label class="auth-role active" data-role="student">
+            <input type="radio" name="login-role" value="student" checked>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+            <span>学生</span>
+          </label>
+          <label class="auth-role" data-role="teacher">
+            <input type="radio" name="login-role" value="teacher">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span>教师</span>
+          </label>
+          <label class="auth-role" data-role="admin">
+            <input type="radio" name="login-role" value="admin">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>管理员</span>
+          </label>
+          <label class="auth-role" data-role="parent">
+            <input type="radio" name="login-role" value="parent">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>家长</span>
+          </label>
+        </div>
+
+        <div class="auth-field">
+          <label for="login-account">账号</label>
+          <input type="text" id="login-account" placeholder="请输入学号 / 工号" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label for="login-password">密码</label>
+          <input type="password" id="login-password" placeholder="请输入密码" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="auth-submit">登录</button>
+        <p class="auth-footer-text">还没有账号？<a href="#" id="goto-register">立即注册</a></p>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="form-register" style="display:none">
+        <div class="auth-role-select">
+          <label class="auth-role active" data-role="student">
+            <input type="radio" name="reg-role" value="student" checked>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>
+            <span>学生</span>
+          </label>
+          <label class="auth-role" data-role="teacher">
+            <input type="radio" name="reg-role" value="teacher">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span>教师</span>
+          </label>
+          <label class="auth-role" data-role="admin">
+            <input type="radio" name="reg-role" value="admin">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>管理员</span>
+          </label>
+          <label class="auth-role" data-role="parent">
+            <input type="radio" name="reg-role" value="parent">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>家长</span>
+          </label>
+        </div>
+
+        <div class="auth-field">
+          <label for="reg-name">姓名</label>
+          <input type="text" id="reg-name" placeholder="请输入真实姓名" required>
+        </div>
+        <div class="auth-field">
+          <label for="reg-account">账号</label>
+          <input type="text" id="reg-account" placeholder="请输入学号 / 工号" required autocomplete="username">
+        </div>
+        <div class="auth-field">
+          <label for="reg-password">密码</label>
+          <input type="password" id="reg-password" placeholder="请设置密码（至少6位）" required minlength="6" autocomplete="new-password">
+        </div>
+        <div class="auth-field">
+          <label for="reg-confirm">确认密码</label>
+          <input type="password" id="reg-confirm" placeholder="请再次输入密码" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="auth-submit">注册</button>
+        <p class="auth-footer-text">已有账号？<a href="#" id="goto-login">立即登录</a></p>
+      </form>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
