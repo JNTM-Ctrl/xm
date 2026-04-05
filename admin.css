@@ -1,0 +1,170 @@
+/* ============================================
+   学府膳智 — admin.css
+   管理员端专属样式
+   ============================================ */
+
+/* Weekly menu editor table enhancements */
+.weekly-meal-section {
+  margin-bottom: 2rem;
+}
+
+.weekly-meal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text);
+}
+
+.weekly-meal-title .meal-icon {
+  font-size: 1.8rem;
+}
+
+.weekly-add-row {
+  margin-top: 1rem;
+}
+
+.dash-table .input-cell {
+  padding: 0.6rem;
+}
+
+.dash-table .input-cell input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1.3rem;
+  font-family: inherit;
+  border: 1.5px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.dash-table .input-cell input:focus {
+  border-color: var(--accent);
+}
+
+/* Total menu admin list */
+.admin-dish-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.6rem;
+  border: 1px solid var(--border);
+  border-radius: 1.2rem;
+  margin-bottom: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.admin-dish-row:hover {
+  border-color: var(--accent);
+  background: rgba(232,89,12,.02);
+}
+
+.admin-dish-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  flex: 1;
+}
+
+.admin-dish-stats {
+  display: flex;
+  gap: 1.6rem;
+  margin: 0 2rem;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+}
+
+.admin-dish-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Vote candidate checkboxes */
+.vote-candidate {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vote-candidate:hover {
+  border-color: var(--accent);
+}
+
+.vote-candidate input[type="checkbox"] {
+  width: 1.8rem;
+  height: 1.8rem;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.vote-candidate label {
+  font-size: 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+  flex: 1;
+}
+
+.vote-candidate .vote-meal-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+/* Vote status toggle */
+.vote-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.4rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.vote-status-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.vote-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.vote-status-dot {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.vote-status-dot--active {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.vote-status-dot--inactive {
+  background: #ef4444;
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}

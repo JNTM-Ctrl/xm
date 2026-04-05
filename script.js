@@ -253,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       formLogin.style.display = 'none';
       formRegister.style.display = '';
     }
+    updateTabIndicator(tab.dataset.tab);
   }
 
   if (btnOpenAuth) btnOpenAuth.addEventListener('click', openAuth);
@@ -299,31 +300,208 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Form submissions (demo — just show alert)
+  // Password toggle
+  document.querySelectorAll('.auth-pw-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap = btn.closest('.auth-input-wrap');
+      const input = wrap.querySelector('input');
+      const eyeOpen = btn.querySelector('.eye-open');
+      const eyeClosed = btn.querySelector('.eye-closed');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = '';
+      } else {
+        input.type = 'password';
+        eyeOpen.style.display = '';
+        eyeClosed.style.display = 'none';
+      }
+    });
+  });
+
+  // Tab indicator animation
+  const tabIndicator = document.querySelector('.auth-tab-indicator');
+  function updateTabIndicator(tabName) {
+    if (!tabIndicator) return;
+    if (tabName === 'register') {
+      tabIndicator.style.transform = 'translateX(100%)';
+    } else {
+      tabIndicator.style.transform = 'translateX(0)';
+    }
+  }
+
+  /* ---------- Login Form (with real auth + redirect) ---------- */
   if (formLogin) {
     formLogin.addEventListener('submit', (e) => {
       e.preventDefault();
       const role = formLogin.querySelector('input[name="login-role"]:checked')?.value;
-      const account = document.getElementById('login-account').value;
-      alert(`登录成功！\n身份：${role}\n账号：${account}`);
-      closeAuth();
+      const account = document.getElementById('login-account').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!account || !password) {
+        XF.toast('请填写账号和密码', 'error');
+        return;
+      }
+
+      const user = XF.login(account, password, role);
+      if (user) {
+        closeAuth();
+        XF.toast(`欢迎回来，${user.name}！`);
+        // Redirect based on role
+        setTimeout(() => {
+          if (role === 'admin') {
+            location.href = 'admin.html';
+          } else if (role === 'student') {
+            location.href = 'student.html';
+          } else {
+            updateLoginState();
+          }
+        }, 600);
+      } else {
+        XF.toast('账号或密码错误', 'error');
+      }
     });
   }
 
+  /* ---------- Register Form (with real auth + redirect) ---------- */
   if (formRegister) {
     formRegister.addEventListener('submit', (e) => {
       e.preventDefault();
       const pw = document.getElementById('reg-password').value;
       const confirm = document.getElementById('reg-confirm').value;
       if (pw !== confirm) {
-        alert('两次输入的密码不一致，请重新输入。');
+        XF.toast('两次输入的密码不一致', 'error');
         return;
       }
       const role = formRegister.querySelector('input[name="reg-role"]:checked')?.value;
-      const name = document.getElementById('reg-name').value;
-      alert(`注册成功！\n身份：${role}\n姓名：${name}`);
+      const name = document.getElementById('reg-name').value.trim();
+      const account = document.getElementById('reg-account').value.trim();
+
+      if (!name || !account) {
+        XF.toast('请填写姓名和账号', 'error');
+        return;
+      }
+
+      const result = XF.register(name, account, pw, role);
+      if (result.error) {
+        XF.toast(result.error, 'error');
+        return;
+      }
       closeAuth();
+      XF.toast(`注册成功！欢迎，${result.name}！`);
+      setTimeout(() => {
+        if (role === 'admin') {
+          location.href = 'admin.html';
+        } else if (role === 'student') {
+          location.href = 'student.html';
+        } else {
+          updateLoginState();
+        }
+      }, 600);
     });
   }
+
+  /* ---------- Homepage Login State ---------- */
+  function updateLoginState() {
+    const currentUser = XF.currentUser();
+    const loggedInDiv = document.getElementById('user-logged-in');
+    const loginBtn = document.getElementById('btn-open-auth');
+
+    if (currentUser) {
+      if (loginBtn) loginBtn.style.display = 'none';
+      if (loggedInDiv) {
+        loggedInDiv.style.display = 'flex';
+        loggedInDiv.style.alignItems = 'center';
+        loggedInDiv.style.gap = '0.8rem';
+        document.getElementById('home-user-name').textContent = currentUser.name;
+      }
+    } else {
+      if (loginBtn) loginBtn.style.display = '';
+      if (loggedInDiv) loggedInDiv.style.display = 'none';
+    }
+  }
+
+  // Go to dashboard button
+  const goDashBtn = document.getElementById('btn-go-dashboard');
+  if (goDashBtn) {
+    goDashBtn.addEventListener('click', () => {
+      const u = XF.currentUser();
+      if (!u) return;
+      if (u.role === 'admin') location.href = 'admin.html';
+      else if (u.role === 'student') location.href = 'student.html';
+    });
+  }
+
+  // Logout from home
+  const logoutHomeBtn = document.getElementById('btn-logout-home');
+  if (logoutHomeBtn) {
+    logoutHomeBtn.addEventListener('click', () => {
+      XF.logout();
+      updateLoginState();
+      XF.toast('已退出登录');
+    });
+  }
+
+  /* ---------- Dynamic Hot Ranking on Homepage ---------- */
+  function renderHomeHotRanking() {
+    if (typeof XF === 'undefined') return;
+    const ranking = XF.getHotRanking(10);
+    const section = document.getElementById('home-hot-section');
+    const container = document.getElementById('home-hot-ranking');
+    if (!section || !container) return;
+
+    if (ranking.length > 0) {
+      section.style.display = '';
+      container.innerHTML = ranking.map((dish, i) => {
+        const numClass = i < 3 ? `dash-rank-num--${i+1}` : 'dash-rank-num--default';
+        return `
+          <div class="dash-rank-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:1.6rem;padding:1.6rem;display:flex;align-items:center;gap:1.6rem;transition:all 0.25s ease;">
+            <div class="dash-rank-num ${numClass}" style="width:3.6rem;height:3.6rem;border-radius:1rem;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.6rem;flex-shrink:0;">${i + 1}</div>
+            <div style="flex:1;">
+              <div style="font-size:1.5rem;font-weight:600;margin-bottom:0.4rem;">${XF.esc(dish.name)}</div>
+              <div style="display:flex;gap:1.2rem;font-size:1.2rem;color:var(--text-secondary);">
+                <span>👍 ${dish.likes?.length || 0}</span>
+                <span>💬 ${dish.comments?.length || 0}</span>
+                <span style="display:inline-flex;align-items:center;padding:0.2rem 0.8rem;border-radius:10rem;font-size:1.1rem;font-weight:600;background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.12));color:#ef4444;">${XF.mealLabel(dish.mealType)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+
+  /* ---------- Dynamic Notices on Homepage ---------- */
+  function renderHomeNotices() {
+    if (typeof XF === 'undefined') return;
+    const notices = XF.getNotices();
+    const section = document.getElementById('home-notices-section');
+    const container = document.getElementById('home-notices-list');
+    if (!section || !container) return;
+
+    if (notices.length > 0) {
+      section.style.display = '';
+      container.innerHTML = notices.slice(0, 5).map(n => `
+        <a href="#" class="story-item reveal visible" style="--delay:0s">
+          <div class="story-inner">
+            <h3 class="story-title">${XF.esc(n.title)}</h3>
+            <div class="story-desc">${XF.esc(n.content)}</div>
+            <div class="story-preview">
+              ${n.imageUrl ? `<img loading="lazy" alt="${XF.esc(n.title)}" src="${XF.esc(n.imageUrl)}" onerror="this.style.display='none'">` : ''}
+            </div>
+            <svg class="story-arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="7 7 17 7 17 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </a>
+      `).join('');
+    }
+  }
+
+  /* ---------- Initialize ---------- */
+  updateLoginState();
+  renderHomeHotRanking();
+  renderHomeNotices();
 
 });

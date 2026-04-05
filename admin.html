@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="学府膳智 — 管理员控制台，管理食谱、论坛、投票与通知。">
+  <title>管理员控制台 — 学府膳智</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <!-- Mobile menu toggle -->
+  <button class="dash-menu-toggle" id="dash-menu-toggle" aria-label="打开菜单">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+
+  <div class="dash-layout">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="dash-sidebar" id="dash-sidebar">
+      <div class="dash-sidebar-header">
+        <a href="index.html" class="dash-sidebar-brand">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.84 0-16-7.16-16-16S15.16 8 24 8s16 7.16 16 16-7.16 16-16 16z"/>
+            <path d="M24 12c-1.1 0-2 .9-2 2v8c0 .74.4 1.38 1 1.73V34c0 .55.45 1 1 1s1-.45 1-1V23.73c.6-.35 1-.99 1-1.73v-8c0-1.1-.9-2-2-2z"/>
+            <circle cx="18" cy="18" r="2"/><circle cx="30" cy="18" r="2"/>
+            <path d="M15 24c0 1.66 1.34 3 3 3h12c1.66 0 3-1.34 3-3v-1H15v1z"/>
+          </svg>
+          <span>学府膳智</span>
+        </a>
+      </div>
+
+      <nav class="dash-sidebar-nav">
+        <button class="dash-nav-item active" data-section="weekly-menu">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          每日食谱
+        </button>
+        <button class="dash-nav-item" data-section="total-menu">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          总食谱
+        </button>
+        <button class="dash-nav-item" data-section="forum">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          论坛管理
+        </button>
+        <button class="dash-nav-item" data-section="suggestions">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          建议反馈
+        </button>
+        <button class="dash-nav-item" data-section="votes">
+          <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          投票管理
+        </button>
+        <button class="dash-nav-item" data-section="ranking">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          热门排名
+        </button>
+        <button class="dash-nav-item" data-section="notices">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          通知管理
+        </button>
+      </nav>
+
+      <div class="dash-sidebar-footer">
+        <div class="dash-user-info">
+          <div class="dash-user-avatar" id="admin-avatar">管</div>
+          <div>
+            <div class="dash-user-name" id="admin-name">管理员</div>
+            <div class="dash-user-role">管理员</div>
+          </div>
+        </div>
+        <button class="dash-logout-btn" id="admin-logout">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          退出登录
+        </button>
+      </div>
+
+      <!-- Theme toggle -->
+      <div style="padding: 0 2rem 1.6rem;">
+        <button type="button" class="dash-btn dash-btn--secondary" id="admin-theme-toggle" style="width:100%;justify-content:center;">
+          <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
+          切换主题
+        </button>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile -->
+    <div class="dash-overlay" id="dash-overlay"></div>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="dash-main">
+
+      <!-- ===== 每日食谱 ===== -->
+      <div class="dash-section active" id="section-weekly-menu">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">📅 每日食谱管理</h1>
+          <button class="dash-btn dash-btn--primary" id="btn-save-weekly">
+            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            保存食谱
+          </button>
+        </div>
+
+        <div class="dash-tabs" id="weekly-day-tabs"></div>
+        <div id="weekly-menu-content"></div>
+      </div>
+
+      <!-- ===== 总食谱 ===== -->
+      <div class="dash-section" id="section-total-menu">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">📖 总食谱管理</h1>
+        </div>
+
+        <div class="dash-tabs" id="total-meal-tabs">
+          <button class="dash-tab active" data-meal="breakfast">早餐</button>
+          <button class="dash-tab" data-meal="lunch">午餐</button>
+          <button class="dash-tab" data-meal="dinner">晚餐</button>
+        </div>
+
+        <div class="dash-panel">
+          <div style="display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;">
+            <input class="dash-input" id="new-dish-name" placeholder="输入新菜品名称..." style="max-width:30rem;">
+            <button class="dash-btn dash-btn--primary" id="btn-add-dish">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              添加菜品
+            </button>
+          </div>
+          <div id="total-menu-list"></div>
+        </div>
+      </div>
+
+      <!-- ===== 论坛管理 ===== -->
+      <div class="dash-section" id="section-forum">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">💬 论坛管理</h1>
+        </div>
+        <div id="admin-forum-list"></div>
+      </div>
+
+      <!-- ===== 建议反馈 ===== -->
+      <div class="dash-section" id="section-suggestions">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">✅ 学生建议与反馈</h1>
+        </div>
+        <div id="admin-suggestions-list"></div>
+      </div>
+
+      <!-- ===== 投票管理 ===== -->
+      <div class="dash-section" id="section-votes">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">📊 投票管理</h1>
+          <button class="dash-btn dash-btn--primary" id="btn-create-vote">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            创建投票
+          </button>
+        </div>
+        <div id="admin-vote-content"></div>
+      </div>
+
+      <!-- ===== 热门排名 ===== -->
+      <div class="dash-section" id="section-ranking">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">⭐ 热门排名 Top 10</h1>
+        </div>
+        <div id="admin-ranking-list"></div>
+      </div>
+
+      <!-- ===== 通知管理 ===== -->
+      <div class="dash-section" id="section-notices">
+        <div class="dash-main-header">
+          <h1 class="dash-main-title">🔔 通知管理</h1>
+          <button class="dash-btn dash-btn--primary" id="btn-add-notice">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            发布通知
+          </button>
+        </div>
+        <div id="admin-notices-list"></div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========== MODALS ========== -->
+  <!-- Reply Suggestion Modal -->
+  <div class="dash-modal-overlay" id="modal-reply-suggestion">
+    <div class="dash-modal">
+      <h3 class="dash-modal-title">回复建议</h3>
+      <div class="dash-form-group">
+        <label>学生建议内容</label>
+        <p id="modal-suggestion-text" style="font-size:1.4rem;line-height:1.6;color:var(--text-secondary);padding:1rem;background:var(--bg);border-radius:1rem;"></p>
+      </div>
+      <div class="dash-form-group">
+        <label>回复内容</label>
+        <textarea class="dash-textarea" id="modal-reply-text" placeholder="请输入你的反馈回复..."></textarea>
+      </div>
+      <div class="dash-modal-actions">
+        <button class="dash-btn dash-btn--secondary" id="modal-reply-cancel">取消</button>
+        <button class="dash-btn dash-btn--primary" id="modal-reply-submit">提交回复</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Notice Modal -->
+  <div class="dash-modal-overlay" id="modal-add-notice">
+    <div class="dash-modal">
+      <h3 class="dash-modal-title">发布通知</h3>
+      <div class="dash-form-group">
+        <label>通知标题</label>
+        <input class="dash-input" id="notice-title" placeholder="请输入通知标题">
+      </div>
+      <div class="dash-form-group">
+        <label>通知内容</label>
+        <textarea class="dash-textarea" id="notice-content" placeholder="请输入通知内容..."></textarea>
+      </div>
+      <div class="dash-form-group">
+        <label>图片链接（可选）</label>
+        <input class="dash-input" id="notice-image" placeholder="输入图片URL（可选）">
+      </div>
+      <div class="dash-modal-actions">
+        <button class="dash-btn dash-btn--secondary" id="notice-cancel">取消</button>
+        <button class="dash-btn dash-btn--primary" id="notice-submit">发布</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Vote Modal -->
+  <div class="dash-modal-overlay" id="modal-create-vote">
+    <div class="dash-modal">
+      <h3 class="dash-modal-title">创建下周食谱投票</h3>
+      <div class="dash-form-group">
+        <label>投票标题</label>
+        <input class="dash-input" id="vote-title" placeholder="例如：下周你最想吃什么？">
+      </div>
+      <div class="dash-form-group">
+        <label>候选菜品（从总食谱中选择）</label>
+        <div id="vote-dish-candidates" style="max-height:30rem;overflow-y:auto;"></div>
+      </div>
+      <div class="dash-modal-actions">
+        <button class="dash-btn dash-btn--secondary" id="vote-cancel">取消</button>
+        <button class="dash-btn dash-btn--primary" id="vote-submit">创建投票</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forum Reply Modal -->
+  <div class="dash-modal-overlay" id="modal-forum-reply">
+    <div class="dash-modal">
+      <h3 class="dash-modal-title">回复帖子</h3>
+      <div class="dash-form-group">
+        <label>回复内容</label>
+        <textarea class="dash-textarea" id="forum-reply-text" placeholder="请输入你的回复..."></textarea>
+      </div>
+      <div class="dash-modal-actions">
+        <button class="dash-btn dash-btn--secondary" id="forum-reply-cancel">取消</button>
+        <button class="dash-btn dash-btn--primary" id="forum-reply-submit">提交回复</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>

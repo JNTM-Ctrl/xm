@@ -1,0 +1,149 @@
+/* ============================================
+   学府膳智 — student.css
+   学生端专属样式
+   ============================================ */
+
+/* User dropdown */
+.stu-dropdown {
+  position: fixed;
+  top: 6rem;
+  right: 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.4rem;
+  padding: 0.6rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+  z-index: 100;
+  display: none;
+  min-width: 16rem;
+  animation: fadeInUp 0.2s ease;
+}
+
+.stu-dropdown.open {
+  display: block;
+}
+
+.stu-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.4rem;
+  border-radius: 1rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  background: none;
+  border: none;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.stu-dropdown-item:hover {
+  background: var(--border);
+}
+
+/* Daily menu cards */
+.daily-meal-card {
+  background: var(--bg-card);
+  border-radius: 2rem;
+  padding: 2.4rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.daily-meal-header {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* Comment new input area inline */
+.dish-comment-input-area {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.dish-comment-input-area input {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
+  font-family: inherit;
+  border: 1.5px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.dish-comment-input-area input:focus {
+  border-color: var(--accent);
+}
+
+/* Reforced mobile nav scroll */
+@media (max-width: 700px) {
+  .stu-nav {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -5rem;
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 0.8rem 1.2rem;
+    justify-content: flex-start;
+    gap: 0.2rem;
+  }
+
+  .stu-header-inner {
+    flex-wrap: nowrap;
+  }
+
+  .stu-body {
+    padding-top: 12.8rem;
+  }
+}
+
+/* Sticky vote progress */
+.stu-vote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.stu-vote-title {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.stu-vote-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.stu-vote-status .dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulse 2s infinite;
+}
+
+.stu-vote-status .dot--closed {
+  background: #ef4444;
+  animation: none;
+}
