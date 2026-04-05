@@ -330,6 +330,93 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /* ---------- Slider Captcha ---------- */
+  let captchaVerified = false;
+
+  const captchaTrack = document.getElementById('login-captcha-track');
+  const captchaThumb = document.getElementById('login-captcha-thumb');
+  const captchaFill = document.getElementById('login-captcha-fill');
+
+  if (captchaTrack && captchaThumb && captchaFill) {
+    let isDragging = false;
+    let startX = 0;
+    let thumbLeft = 0;
+
+    function getMaxDrag() {
+      return captchaTrack.offsetWidth - captchaThumb.offsetWidth - 4; // 4px for border
+    }
+
+    captchaThumb.addEventListener('pointerdown', (e) => {
+      if (captchaVerified) return;
+      isDragging = true;
+      startX = e.clientX - thumbLeft;
+      captchaTrack.classList.add('dragging');
+      captchaThumb.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    document.addEventListener('pointermove', (e) => {
+      if (!isDragging || captchaVerified) return;
+      const maxDrag = getMaxDrag();
+      let newLeft = e.clientX - startX;
+      newLeft = Math.max(0, Math.min(newLeft, maxDrag));
+      thumbLeft = newLeft;
+      captchaThumb.style.left = newLeft + 'px';
+      captchaFill.style.width = newLeft + 'px';
+    });
+
+    document.addEventListener('pointerup', () => {
+      if (!isDragging || captchaVerified) return;
+      isDragging = false;
+      captchaTrack.classList.remove('dragging');
+
+      const maxDrag = getMaxDrag();
+      // Verify if dragged to >95% of max
+      if (thumbLeft >= maxDrag * 0.95) {
+        captchaVerified = true;
+        captchaThumb.style.left = maxDrag + 'px';
+        captchaFill.style.width = maxDrag + 'px';
+        captchaTrack.classList.add('verified');
+        // Change thumb icon to checkmark
+        captchaThumb.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+      } else {
+        // Spring back to start
+        thumbLeft = 0;
+        captchaThumb.style.transition = 'left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        captchaFill.style.transition = 'width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        captchaThumb.style.left = '0px';
+        captchaFill.style.width = '0px';
+        setTimeout(() => {
+          captchaThumb.style.transition = '';
+          captchaFill.style.transition = '';
+        }, 400);
+      }
+    });
+  }
+
+  // Reset captcha when switching tabs
+  function resetCaptcha() {
+    captchaVerified = false;
+    if (captchaThumb) {
+      captchaThumb.style.left = '0px';
+      captchaThumb.style.transition = '';
+      captchaThumb.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+    }
+    if (captchaFill) {
+      captchaFill.style.width = '0px';
+      captchaFill.style.transition = '';
+    }
+    if (captchaTrack) {
+      captchaTrack.classList.remove('verified', 'dragging');
+    }
+  }
+
+  // Reset captcha when auth modal opens/closes or tab switches
+  authTabs.forEach(tab => {
+    tab.addEventListener('click', resetCaptcha);
+  });
+  if (btnCloseAuth) btnCloseAuth.addEventListener('click', resetCaptcha);
+
   /* ---------- Login Form (with real auth + redirect) ---------- */
   if (formLogin) {
     formLogin.addEventListener('submit', (e) => {
@@ -340,6 +427,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!account || !password) {
         XF.toast('请填写账号和密码', 'error');
+        return;
+      }
+
+      if (!captchaVerified) {
+        XF.toast('请先完成滑块验证', 'error');
+        // Highlight the captcha
+        if (captchaTrack) {
+          captchaTrack.style.animation = 'captchaShake 0.5s ease';
+          setTimeout(() => captchaTrack.style.animation = '', 500);
+        }
         return;
       }
 
@@ -359,6 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
       } else {
         XF.toast('账号或密码错误', 'error');
+        resetCaptcha();
       }
     });
   }
