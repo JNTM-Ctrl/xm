@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    学府膳智 — script.js
    Pure Vanilla JS — No dependencies
    ============================================ */
@@ -659,7 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const notice = notices.find(n => n.id === id);
         if (!notice) return;
         openFeatureModal(`
-          <div class="fm-header" style="background:linear-gradient(135deg,#6366f1,#818cf8,#a5b4fc);">
+          <div class="fm-header" style="background:linear-gradient(135deg,#d4af37,#e5c151,#a5b4fc);">
             <span class="fm-tag">📢 通知公告</span>
             <h2 class="fm-title">${XF.esc(notice.title)}</h2>
           </div>
@@ -763,7 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const bars = [
         { label: '蛋白质', pct: 88, color: '#10b981' },
         { label: '碳水化合物', pct: 75, color: '#f59e0b' },
-        { label: '膳食纤维', pct: 62, color: '#8b5cf6' },
+        { label: '膳食纤维', pct: 62, color: '#b76e79' },
         { label: '维生素', pct: 80, color: '#ec4899' },
         { label: '矿物质', pct: 70, color: '#06b6d4' },
         { label: '脂肪（控制）', pct: 45, color: '#ef4444' }
@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="fm-stats-grid">
             <div class="fm-stat-card"><div class="fm-stat-value" style="color:#10b981;">2,150</div><div class="fm-stat-label">日均热量(kcal)</div></div>
             <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">96%</div><div class="fm-stat-label">营养达标率</div></div>
-            <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">18</div><div class="fm-stat-label">菜品种类</div></div>
+            <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">18</div><div class="fm-stat-label">菜品种类</div></div>
           </div>
           <h3 style="font-size:1.6rem;font-weight:700;margin-bottom:1.6rem;">📈 各营养素达标情况</h3>
           <div class="fm-bar-chart">
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
     'survey': () => {
       const ranking = XF.getHotRanking(5);
       return `
-        <div class="fm-header" style="background:linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa);">
+        <div class="fm-header" style="background:linear-gradient(135deg,#d4af37,#b76e79,#d4a373);">
           <span class="fm-tag">📋 学生评价</span>
           <h2 class="fm-title">学生满意度调查结果</h2>
           <p class="fm-desc">基于全体学生反馈的真实数据</p>
@@ -815,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="fm-stats-grid">
             <div class="fm-stat-card"><div class="fm-stat-value" style="color:#10b981;">95%</div><div class="fm-stat-label">口味满意度</div></div>
             <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">89%</div><div class="fm-stat-label">卫生满意度</div></div>
-            <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">91%</div><div class="fm-stat-label">服务满意度</div></div>
+            <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">91%</div><div class="fm-stat-label">服务满意度</div></div>
           </div>
           <h3 style="font-size:1.6rem;font-weight:700;margin-bottom:1.6rem;">🏆 最受欢迎菜品 TOP 5</h3>
           <div class="fm-rank-list">
@@ -848,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="fm-stats-grid">
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#10b981;">12</div><div class="fm-stat-label">合作农场</div></div>
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">100%</div><div class="fm-stat-label">检测合格率</div></div>
-          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">6项</div><div class="fm-stat-label">质检流程</div></div>
+          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">6项</div><div class="fm-stat-label">质检流程</div></div>
         </div>
       </div>
     `,
@@ -893,7 +893,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="fm-stats-grid">
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#ec4899;">📍</div><div class="fm-stat-label">1楼 C1窗口</div></div>
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">⏰</div><div class="fm-stat-label">14:00-17:00</div></div>
-          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">🎉</div><div class="fm-stat-label">开业特惠8折</div></div>
+          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">🎉</div><div class="fm-stat-label">开业特惠8折</div></div>
         </div>
       </div>
     `,
@@ -903,7 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxVotes = Math.max(...v.dishes.map(d => d.votes), 1);
       const sorted = [...v.dishes].sort((a, b) => b.votes - a.votes);
       return `
-        <div class="fm-header" style="background:linear-gradient(135deg,#6366f1,#818cf8,#a5b4fc);">
+        <div class="fm-header" style="background:linear-gradient(135deg,#d4af37,#e5c151,#a5b4fc);">
           <span class="fm-tag">🗳️ 投票评价</span>
           <h2 class="fm-title">${XF.esc(v.title || '下周食谱由你做主！')}</h2>
           <p class="fm-desc">投票选出你最想吃的菜品，${v.active ? '投票进行中 🟢' : '投票已结束 🔴'}</p>
@@ -949,7 +949,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="fm-stats-grid">
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#10b981;">3,000+</div><div class="fm-stat-label">日均供餐</div></div>
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">6</div><div class="fm-stat-label">专业厨师</div></div>
-          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">50+</div><div class="fm-stat-label">菜品种类</div></div>
+          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">50+</div><div class="fm-stat-label">菜品种类</div></div>
         </div>
       </div>
     `,
@@ -1012,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="fm-stats-grid">
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#10b981;">326</div><div class="fm-stat-label">批次检测</div></div>
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">0</div><div class="fm-stat-label">不合格批次</div></div>
-          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#8b5cf6;">A级</div><div class="fm-stat-label">卫生评级</div></div>
+          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#b76e79;">A级</div><div class="fm-stat-label">卫生评级</div></div>
         </div>
       </div>
     `,
@@ -1079,7 +1079,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <img class="fm-announce-img" src="${img}" alt="${XF.esc(dishName)}" onerror="this.style.display='none'">
         <div class="fm-stats-grid" style="margin-bottom:2.4rem;">
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#ef4444;">❤️ ${likeCount}</div><div class="fm-stat-label">总点赞</div></div>
-          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#6366f1;">💬 ${commentCount}</div><div class="fm-stat-label">总评论</div></div>
+          <div class="fm-stat-card"><div class="fm-stat-value" style="color:#d4af37;">💬 ${commentCount}</div><div class="fm-stat-label">总评论</div></div>
           <div class="fm-stat-card"><div class="fm-stat-value" style="color:#f59e0b;">📝 ${found?.suggestions?.length||0}</div><div class="fm-stat-label">总建议</div></div>
         </div>
         ${comments.length ? `
@@ -1163,4 +1163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 });
+
+
+
 

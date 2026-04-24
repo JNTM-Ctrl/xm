@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    学府膳智 — shared.css
    共享仪表板样式（管理员端 & 学生端通用）
    ============================================ */
@@ -571,7 +571,7 @@
 
 .dash-badge--admin {
   background: rgba(99, 102, 241, 0.12);
-  color: #6366f1;
+  color: #d4af37;
 }
 
 .dash-badge--student {
@@ -657,7 +657,7 @@
   flex-shrink: 0;
 }
 
-.dash-post-avatar--admin { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.dash-post-avatar--admin { background: linear-gradient(135deg, #d4af37, #b76e79); }
 .dash-post-avatar--student { background: linear-gradient(135deg, #10b981, #34d399); }
 
 .dash-post-name {
@@ -1222,3 +1222,6 @@
   gap: 1rem;
   margin-top: 2rem;
 }
+
+
+

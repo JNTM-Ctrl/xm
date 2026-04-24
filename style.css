@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    学府膳智 — style.css
    Design inspired by cly.cc.cd
    ============================================ */
@@ -327,13 +327,13 @@ button {
 }
 .hero-orb--1 {
   width: 30vw; height: 30vw; max-width: 40rem; max-height: 40rem;
-  background: rgba(99,102,241,.25);
+  background: rgba(212,175,55,.25);
   top: 10%; left: 5%;
   animation-delay: 0s;
 }
 .hero-orb--2 {
   width: 25vw; height: 25vw; max-width: 35rem; max-height: 35rem;
-  background: rgba(139,92,246,.2);
+  background: rgba(183,110,121,.2);
   top: 20%; right: 8%;
   animation-delay: -6s;
   animation-duration: 22s;
@@ -379,7 +379,7 @@ button {
 
 .hero-char:hover {
   transform: scale(2.2) translateY(-0.15em);
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 40%, #ec4899 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #b76e79 40%, #ec4899 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -387,7 +387,7 @@ button {
 }
 
 [data-theme="dark"] .hero-char:hover {
-  background: linear-gradient(135deg, #818cf8 0%, #a78bfa 40%, #f472b6 100%);
+  background: linear-gradient(135deg, #e5c151 0%, #d4a373 40%, #f472b6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -922,7 +922,7 @@ button {
   position: relative;
   margin: 0 -3.2rem;
   height: 12rem;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 30%, #ec4899 60%, #06b6d4 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #b76e79 30%, #ec4899 60%, #06b6d4 100%);
   background-size: 300% 300%;
   animation: authGradientShift 8s ease infinite;
   border-radius: 2.4rem 2.4rem 0 0;
@@ -1047,7 +1047,7 @@ button {
   left: 0.4rem;
   width: calc(50% - 0.4rem);
   height: calc(100% - 0.8rem);
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  background: linear-gradient(135deg, var(--accent), #b76e79);
   border-radius: 1rem;
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 4px 12px var(--accent-glow);
@@ -1087,7 +1087,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(139,92,246,.04));
+  background: linear-gradient(135deg, rgba(212,175,55,.06), rgba(183,110,121,.04));
   opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: inherit;
@@ -1106,7 +1106,7 @@ button {
 .auth-role.active {
   border-color: var(--accent);
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(99,102,241,.18);
+  box-shadow: 0 8px 24px rgba(212,175,55,.18);
 }
 
 .auth-role.active::before {
@@ -1114,7 +1114,7 @@ button {
 }
 
 [data-theme="dark"] .auth-role.active {
-  box-shadow: 0 8px 24px rgba(99,102,241,.25);
+  box-shadow: 0 8px 24px rgba(212,175,55,.25);
 }
 
 .auth-role-icon {
@@ -1135,7 +1135,7 @@ button {
 }
 
 .auth-role.active .auth-role-icon {
-  background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(139,92,246,.08));
+  background: linear-gradient(135deg, rgba(212,175,55,.12), rgba(183,110,121,.08));
 }
 
 .auth-role.active .auth-role-icon svg {
@@ -1215,7 +1215,7 @@ button {
 
 .auth-input-wrap input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(99,102,241,.1);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.1);
   background: var(--bg-card);
 }
 
@@ -1260,7 +1260,7 @@ button {
   font-size: 1.6rem;
   font-weight: 700;
   border-radius: 1.4rem;
-  background: linear-gradient(135deg, #6366f1, #7c3aed, #8b5cf6);
+  background: linear-gradient(135deg, #d4af37, #c29e2d, #b76e79);
   background-size: 200% 200%;
   color: #fff;
   display: flex;
@@ -1382,7 +1382,7 @@ button {
 .dash-rank-card:hover {
   border-color: var(--accent) !important;
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(99,102,241,.12);
+  box-shadow: 0 4px 16px rgba(212,175,55,.12);
 }
 
 /* ---------- Enhanced Global Animations ---------- */
@@ -1451,8 +1451,8 @@ button {
 }
 
 @keyframes loginPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,.4); }
-  50% { box-shadow: 0 0 0 8px rgba(99,102,241,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,.4); }
+  50% { box-shadow: 0 0 0 8px rgba(212,175,55,0); }
 }
 
 /* Enhanced hero glow */
@@ -1464,7 +1464,7 @@ button {
   transform: translateX(-50%);
   width: 70%;
   height: 40%;
-  background: radial-gradient(ellipse, rgba(99,102,241,.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(212,175,55,.06) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -1547,7 +1547,7 @@ button {
 .fm-header {
   padding: 4rem 3.2rem 2.4rem;
   border-radius: 2.4rem 2.4rem 0 0;
-  background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(139,92,246,.06));
+  background: linear-gradient(135deg, rgba(212,175,55,.08), rgba(183,110,121,.06));
   position: relative; overflow: hidden;
 }
 .fm-header::before {
@@ -1556,10 +1556,10 @@ button {
   top: -50%; right: -20%;
   width: 40rem; height: 40rem;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(99,102,241,.08), transparent 70%);
+  background: radial-gradient(circle, rgba(212,175,55,.08), transparent 70%);
   pointer-events: none;
 }
-[data-theme="dark"] .fm-header { background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(139,92,246,.1)); }
+[data-theme="dark"] .fm-header { background: linear-gradient(135deg, rgba(212,175,55,.12), rgba(183,110,121,.1)); }
 
 .fm-badge {
   display: inline-block;
@@ -1628,7 +1628,7 @@ button {
 }
 .fm-stat-value {
   font-size: clamp(2.8rem, 2rem + 1vw, 3.6rem); font-weight: 800;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #d4af37, #b76e79);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; line-height: 1.2; margin-bottom: 0.4rem;
 }
@@ -1636,7 +1636,7 @@ button {
 
 .fm-big-score {
   text-align: center; padding: 3.2rem 2rem;
-  background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(16,185,129,.06));
+  background: linear-gradient(135deg, rgba(212,175,55,.06), rgba(16,185,129,.06));
   border-radius: 2rem; margin-bottom: 2.4rem;
 }
 .fm-big-number {
@@ -1656,7 +1656,7 @@ button {
 }
 .fm-step-num {
   width: 4rem; height: 4rem; border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #d4af37, #b76e79);
   color: #fff; font-weight: 800; font-size: 1.6rem;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; position: relative; z-index: 1;
@@ -1707,7 +1707,7 @@ button {
   content: ''; position: absolute;
   left: 0; top: 0; bottom: 0;
   width: var(--vote-pct, 0%);
-  background: linear-gradient(90deg, rgba(99,102,241,.1), rgba(99,102,241,.03));
+  background: linear-gradient(90deg, rgba(212,175,55,.1), rgba(212,175,55,.03));
   transition: width 1s ease;
 }
 .fm-vote-rank { font-size: 1.6rem; font-weight: 800; width: 2.4rem; text-align: center; position: relative; z-index: 1; }
@@ -1723,11 +1723,11 @@ button {
 .fm-cta {
   display: inline-flex; align-items: center; gap: 0.8rem;
   padding: 1.2rem 2.4rem; border-radius: 1.4rem;
-  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  background: linear-gradient(135deg, #d4af37, #c29e2d);
   color: #fff; font-size: 1.5rem; font-weight: 700;
   border: none; cursor: pointer; transition: all var(--transition);
 }
-.fm-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,.3); }
+.fm-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,55,.3); }
 
 .fm-announce-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 1.6rem; margin-bottom: 2rem; }
 .fm-announce-time { font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 1.6rem; display: flex; align-items: center; gap: 0.6rem; }
@@ -1776,10 +1776,10 @@ button {
 
 .fm-day-tab:hover { border-color: var(--accent); color: var(--text); }
 .fm-day-tab.active {
-  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  background: linear-gradient(135deg, #d4af37, #c29e2d);
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 4px 12px rgba(99,102,241,.3);
+  box-shadow: 0 4px 12px rgba(212,175,55,.3);
 }
 
 /* Stats grid */
@@ -1906,7 +1906,7 @@ button {
 
 .captcha-track.dragging {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(99,102,241,.1);
+  box-shadow: 0 0 0 3px rgba(212,175,55,.1);
 }
 
 .captcha-track.verified {
@@ -1920,7 +1920,7 @@ button {
   top: 0;
   height: 100%;
   width: 0;
-  background: linear-gradient(90deg, rgba(99,102,241,.08), rgba(99,102,241,.15));
+  background: linear-gradient(90deg, rgba(212,175,55,.08), rgba(212,175,55,.15));
   border-radius: 1.4rem 0 0 1.4rem;
   transition: none;
   pointer-events: none;
@@ -1956,7 +1956,7 @@ button {
   inset: 0;
   background: linear-gradient(90deg,
     transparent 30%,
-    rgba(99,102,241,.06) 50%,
+    rgba(212,175,55,.06) 50%,
     transparent 70%);
   background-size: 200% 100%;
   animation: captchaShimmer 3s ease-in-out infinite;
@@ -1985,20 +1985,20 @@ button {
   width: 4.6rem;
   height: 4.0rem;
   border-radius: 1.2rem;
-  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  background: linear-gradient(135deg, var(--accent), #b76e79);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: grab;
-  box-shadow: 0 2px 10px rgba(99,102,241,.3);
+  box-shadow: 0 2px 10px rgba(212,175,55,.3);
   transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.1s ease;
   z-index: 2;
 }
 
 .captcha-thumb:active {
   cursor: grabbing;
-  box-shadow: 0 4px 20px rgba(99,102,241,.4);
+  box-shadow: 0 4px 20px rgba(212,175,55,.4);
 }
 
 .captcha-thumb svg {
@@ -2077,7 +2077,7 @@ main {
   transform: translateX(-50%);
   width: 4rem;
   height: 0.3rem;
-  background: linear-gradient(90deg, var(--accent), #8b5cf6);
+  background: linear-gradient(90deg, var(--accent), #b76e79);
   border-radius: 10rem;
   opacity: 0.6;
 }
@@ -2093,7 +2093,7 @@ main {
 
 /* Nav link hover glow */
 .nav-links a:hover {
-  text-shadow: 0 0 20px rgba(99,102,241,.3);
+  text-shadow: 0 0 20px rgba(212,175,55,.3);
 }
 
 /* Card image parallax-like on hover */
@@ -2120,3 +2120,7 @@ main {
   outline-offset: 3px;
   border-radius: 0.4rem;
 }
+
+
+
+
