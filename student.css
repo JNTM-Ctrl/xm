@@ -143,7 +143,156 @@
   animation: pulse 2s infinite;
 }
 
-.stu-vote-status .dot--closed {
-  background: #ef4444;
-  animation: none;
+/* ============================================
+   Beautiful Barrage System
+   ============================================ */
+.barrage-stage {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2.4rem;
+  padding: 0.8rem 0;
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(212,175,55,.03) 50%, var(--bg) 100%);
+  border-radius: 1.6rem;
+  border: 1px solid var(--border);
 }
+
+.barrage-track {
+  display: flex;
+  height: 3.2rem;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  margin: 0.5rem 0;
+}
+
+.barrage-track::before,
+.barrage-track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4rem;
+  z-index: 2;
+  pointer-events: none;
+}
+.barrage-track::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg) 0%, transparent 100%);
+}
+.barrage-track::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg) 0%, transparent 100%);
+}
+
+.barrage-track:hover .barrage-inner {
+  animation-play-state: paused;
+}
+
+.barrage-inner {
+  display: flex;
+  gap: 2rem;
+  white-space: nowrap;
+  will-change: transform;
+  animation: barrageScroll var(--barrage-dur, 30s) linear infinite;
+}
+
+@keyframes barrageScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.barrage-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 10rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  cursor: default;
+  animation: itemGlow 3s ease-in-out infinite;
+}
+
+.barrage-item:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  z-index: 5;
+}
+
+@keyframes itemGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.05); }
+}
+
+/* Barrage accent colors */
+.barrage-item--hot {
+  background: rgba(239,68,68,.08);
+  border-color: rgba(239,68,68,.2);
+  color: #ef4444;
+}
+.barrage-item--like {
+  background: rgba(212,175,55,.08);
+  border-color: rgba(212,175,55,.25);
+  color: var(--accent);
+}
+.barrage-item--comment {
+  background: rgba(6,182,212,.08);
+  border-color: rgba(6,182,212,.2);
+  color: #06b6d4;
+}
+.barrage-item--notice {
+  background: rgba(16,185,129,.08);
+  border-color: rgba(16,185,129,.2);
+  color: #10b981;
+}
+.barrage-item--forum {
+  background: rgba(99,102,241,.08);
+  border-color: rgba(99,102,241,.2);
+  color: #6366f1;
+}
+
+[data-theme="dark"] .barrage-item--hot {
+  background: rgba(239,68,68,.12);
+  color: #f87171;
+}
+[data-theme="dark"] .barrage-item--like {
+  background: rgba(229,193,81,.12);
+  color: #e5c151;
+}
+[data-theme="dark"] .barrage-item--comment {
+  background: rgba(6,182,212,.12);
+  color: #22d3ee;
+}
+[data-theme="dark"] .barrage-item--notice {
+  background: rgba(16,185,129,.12);
+  color: #34d399;
+}
+[data-theme="dark"] .barrage-item--forum {
+  background: rgba(99,102,241,.12);
+  color: #818cf8;
+}
+
+.barrage-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* Mobile tweaks */
+@media (max-width: 700px) {
+  .barrage-track { height: 2.8rem; }
+  .barrage-item { font-size: 1.2rem; padding: 0.4rem 1rem; gap: 0.4rem; }
+  .barrage-icon { font-size: 1rem; }
+  .barrage-track::before,
+  .barrage-track::after { width: 2.5rem; }
+}
+
+@media (max-width: 480px) {
+  .barrage-stage { margin: 0 -0.5rem 1.6rem; border-radius: 1rem; }
+}
+

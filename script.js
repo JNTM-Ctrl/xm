@@ -20,35 +20,61 @@ document.addEventListener('DOMContentLoaded', () => {
     '"Pacifico", cursive'
   ];
 
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
   heroChars.forEach((char, idx) => {
-    char.addEventListener('mouseenter', () => {
-      // Random font on hovered char
-      const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
-      char.style.fontFamily = randomFont;
+    // Set staggered entrance delay for CSS animation
+    char.style.setProperty('--char-delay', (idx * 0.12) + 's');
 
-      // Push siblings away
-      heroChars.forEach((sibling, sIdx) => {
-        if (sIdx === idx) return;
-        const distance = Math.abs(sIdx - idx);
-        const pushPx = Math.max(15, 80 - distance * 20); // closer = more push
-        sibling.style.setProperty('--push-distance', pushPx + 'px');
-        sibling.classList.add('pushed');
-        if (sIdx < idx) {
-          sibling.classList.add('pushed-left');
-          sibling.classList.remove('pushed-right');
-        } else {
-          sibling.classList.add('pushed-right');
-          sibling.classList.remove('pushed-left');
-        }
-      });
+    // Click ripple effect
+    char.addEventListener('click', () => {
+      char.style.animation = 'none';
+      char.offsetHeight;
+      char.style.animation = 'charClickBurst 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+      const ripple = document.createElement('div');
+      ripple.className = 'char-ripple';
+      char.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
     });
 
-    char.addEventListener('mouseleave', () => {
-      char.style.fontFamily = '';
-      heroChars.forEach(sibling => {
-        sibling.classList.remove('pushed', 'pushed-left', 'pushed-right');
+    if (supportsHover) {
+      char.addEventListener('mouseenter', () => {
+        const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
+        char.style.fontFamily = randomFont;
+
+        heroChars.forEach((sibling, sIdx) => {
+          if (sIdx === idx) return;
+          const distance = Math.abs(sIdx - idx);
+          const pushPx = Math.max(15, 80 - distance * 20);
+          sibling.style.setProperty('--push-distance', pushPx + 'px');
+          sibling.classList.add('pushed');
+          if (sIdx < idx) {
+            sibling.classList.add('pushed-left');
+            sibling.classList.remove('pushed-right');
+          } else {
+            sibling.classList.add('pushed-right');
+            sibling.classList.remove('pushed-left');
+          }
+        });
       });
-    });
+
+      char.addEventListener('mouseleave', () => {
+        char.style.fontFamily = '';
+        heroChars.forEach(sibling => {
+          sibling.classList.remove('pushed', 'pushed-left', 'pushed-right');
+        });
+      });
+    } else {
+      char.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        char.style.animation = 'none';
+        char.offsetHeight;
+        char.style.animation = 'charClickBurst 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+        const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
+        char.style.fontFamily = randomFont;
+      });
+    }
   });
 
   /* ---------- Theme Toggle ---------- */
@@ -192,35 +218,40 @@ document.addEventListener('DOMContentLoaded', () => {
       '科学配餐，健康成长',
       '学生的食堂，大家的厨房'
     ];
-    let phraseIdx = 0;
-    let charIdx = 0;
-    let isDeleting = false;
 
-    function type() {
-      const current = phrases[phraseIdx];
-      if (isDeleting) {
-        typingEl.textContent = current.substring(0, charIdx - 1);
-        charIdx--;
-      } else {
-        typingEl.textContent = current.substring(0, charIdx + 1);
-        charIdx++;
+    if (prefersReducedMotion) {
+      typingEl.textContent = phrases[0];
+    } else {
+      let phraseIdx = 0;
+      let charIdx = 0;
+      let isDeleting = false;
+
+      function type() {
+        const current = phrases[phraseIdx];
+        if (isDeleting) {
+          typingEl.textContent = current.substring(0, charIdx - 1);
+          charIdx--;
+        } else {
+          typingEl.textContent = current.substring(0, charIdx + 1);
+          charIdx++;
+        }
+
+        let delay = isDeleting ? 40 : 100;
+
+        if (!isDeleting && charIdx === current.length) {
+          delay = 2500;
+          isDeleting = true;
+        } else if (isDeleting && charIdx === 0) {
+          isDeleting = false;
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          delay = 400;
+        }
+
+        setTimeout(type, delay);
       }
 
-      let delay = isDeleting ? 40 : 100;
-
-      if (!isDeleting && charIdx === current.length) {
-        delay = 2500;
-        isDeleting = true;
-      } else if (isDeleting && charIdx === 0) {
-        isDeleting = false;
-        phraseIdx = (phraseIdx + 1) % phrases.length;
-        delay = 400;
-      }
-
-      setTimeout(type, delay);
+      setTimeout(type, 800);
     }
-
-    setTimeout(type, 800);
   }
 
   /* ---------- Auth Modal ---------- */
@@ -1161,6 +1192,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
     }
   });
+
+  /* ---------- Hero Mouse Parallax ---------- */
+  const heroSection = document.getElementById('hero');
+  if (heroSection && supportsHover && !prefersReducedMotion) {
+    heroSection.addEventListener('mousemove', (e) => {
+      const rect = heroSection.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      heroSection.style.setProperty('--mouse-x', x.toFixed(3));
+      heroSection.style.setProperty('--mouse-y', y.toFixed(3));
+    });
+    heroSection.addEventListener('mouseleave', () => {
+      heroSection.style.setProperty('--mouse-x', '0');
+      heroSection.style.setProperty('--mouse-y', '0');
+    });
+  }
 
 });
 

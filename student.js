@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
      HOME — HOT RANKING + NOTICES
      ============================================ */
   function renderHome() {
+    renderBarrage();
     renderHotRanking();
     renderNotices();
   }
@@ -125,6 +126,70 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `).join('');
+  }
+
+  /* ============================================
+     HOME — BARAGE SYSTEM
+     ============================================ */
+  function renderBarrage() {
+    const barrItems = [];
+
+    // Hot dishes
+    const hotDishes = XF.getHotRanking(8);
+    hotDishes.forEach((d, i) => {
+      barrItems.push({
+        icon: ['🥇','🥈','🥉'][i] || '🔥',
+        text: `${d.name} 👍${d.likes?.length || 0}`,
+        cls: 'barrage-item--hot'
+      });
+    });
+
+    // Recent comments from total menu
+    const totalMenu = XF.getTotalMenu();
+    ['breakfast','lunch','dinner'].forEach(meal => {
+      (totalMenu[meal] || []).forEach(dish => {
+        (dish.comments || []).slice(-2).forEach(c => {
+          barrItems.push({
+            icon: '💬',
+            text: `${c.userName}: ${c.text.slice(0, 18)}`,
+            cls: 'barrage-item--comment'
+          });
+        });
+      });
+    });
+
+    // Notices
+    XF.getNotices().slice(0, 4).forEach(n => {
+      barrItems.push({ icon: '📢', text: n.title, cls: 'barrage-item--notice' });
+    });
+
+    // Forum posts
+    XF.getForumPosts().slice(0, 4).forEach(p => {
+      barrItems.push({ icon: '💬', text: p.title, cls: 'barrage-item--forum' });
+    });
+
+    const shuffled = barrItems.sort(() => Math.random() - 0.5).slice(0, 24);
+    if (!shuffled.length) {
+      shuffled.push({ icon: '🍽️', text: '欢迎来到学府膳智！', cls: 'barrage-item--like' });
+    }
+
+    const chunkSize = Math.ceil(shuffled.length / 3);
+    [1, 2, 3].forEach(trackNum => {
+      const track = document.getElementById(`barrage-track-${trackNum}`);
+      if (!track) return;
+      const start = (trackNum - 1) * chunkSize;
+      const chunk = shuffled.slice(start, start + chunkSize);
+      const doubled = [...chunk, ...chunk];
+      const dur = 22 + trackNum * 5 + Math.random() * 8;
+      track.innerHTML = `
+        <div class="barrage-inner" style="--barrage-dur:${dur.toFixed(1)}s">
+          ${doubled.map(item => `
+            <span class="barrage-item ${item.cls}">
+              <span class="barrage-icon">${item.icon}</span>${XF.esc(item.text)}
+            </span>
+          `).join('')}
+        </div>`;
+    });
   }
 
   /* ============================================
