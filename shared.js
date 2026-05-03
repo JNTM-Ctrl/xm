@@ -356,6 +356,26 @@ const XF = (() => {
   /* ---------- Init ---------- */
   seed();
 
+  /* ---------- User Preferences ---------- */
+  function getUserPreferences(userId) {
+    const prefs = get('xf_userPreferences', {});
+    return prefs[userId] || null;
+  }
+
+  function saveUserPreferences(userId, userName, preferences) {
+    const prefs = get('xf_userPreferences', {});
+    prefs[userId] = {
+      ...preferences,
+      userName,
+      updatedAt: Date.now()
+    };
+    set('xf_userPreferences', prefs);
+  }
+
+  function getAllUserPreferences() {
+    return get('xf_userPreferences', {});
+  }
+
   return {
     get, set, uid, formatTime, esc, toast,
     login, register, logout, currentUser,
@@ -367,6 +387,7 @@ const XF = (() => {
     getSuggestions, setSuggestions, addSuggestion, replySuggestion,
     getVotes, setVotes, castVote,
     getNotices, setNotices, addNotice, deleteNotice,
+    getUserPreferences, saveUserPreferences, getAllUserPreferences,
     mealLabel, dayLabel
   };
 

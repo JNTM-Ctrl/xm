@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'weekly-menu': renderWeeklyMenu(); break;
       case 'total-menu': renderTotalMenu(); break;
       case 'forum': renderForum(); break;
+      case 'preferences': renderPreferences(); break;
       case 'suggestions': renderSuggestions(); break;
       case 'votes': renderVotes(); break;
       case 'ranking': renderRanking(); break;
@@ -569,6 +570,207 @@ document.addEventListener('DOMContentLoaded', () => {
     renderNotices();
     XF.toast('通知发布成功！');
   });
+
+  /* ============================================
+     ⑧ PREFERENCES SUMMARY
+     ============================================ */
+  function renderPreferences() {
+    const allPrefs = XF.getAllUserPreferences();
+    const container = document.getElementById('admin-preferences-content');
+    const userIds = Object.keys(allPrefs);
+
+    if (!userIds.length) {
+      container.innerHTML = `<div class="dash-panel"><div class="dash-empty"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><p>暂无学生设置偏好</p></div></div>`;
+      return;
+    }
+
+    // Aggregate statistics
+    const tasteCounts = {};
+    const dietCounts = {};
+    const allergyCounts = {};
+    const cuisineCounts = {};
+    const spicyCounts = {};
+
+    userIds.forEach(uid => {
+      const p = allPrefs[uid];
+      (p.spicyLevel || []).forEach(s => { spicyCounts[s] = (spicyCounts[s] || 0) + 1; });
+      (p.tastes || []).forEach(t => { tasteCounts[t] = (tasteCounts[t] || 0) + 1; });
+      (p.dietType || []).forEach(d => { dietCounts[d] = (dietCounts[d] || 0) + 1; });
+      (p.allergies || []).forEach(a => { allergyCounts[a] = (allergyCounts[a] || 0) + 1; });
+      (p.cuisines || []).forEach(c => { cuisineCounts[c] = (cuisineCounts[c] || 0) + 1; });
+    });
+
+    const totalPrefs = userIds.length;
+
+    // --- Summary Stat Cards ---
+    const statCards = `
+      <div class="pref-stat-grid">
+        <div class="pref-stat-card pref-stat-card--gold">
+          <div class="pref-stat-icon">👥</div>
+          <div class="pref-stat-value">${totalPrefs}</div>
+          <div class="pref-stat-label">已设置偏好学生</div>
+        </div>
+        <div class="pref-stat-card pref-stat-card--green">
+          <div class="pref-stat-icon">🍽️</div>
+          <div class="pref-stat-value">${Object.keys(cuisineCounts).length}</div>
+          <div class="pref-stat-label">偏好菜系种类</div>
+        </div>
+        <div class="pref-stat-card pref-stat-card--red">
+          <div class="pref-stat-icon">⚠️</div>
+          <div class="pref-stat-value">${Object.keys(allergyCounts).length}</div>
+          <div class="pref-stat-label">涉及过敏食材</div>
+        </div>
+        <div class="pref-stat-card pref-stat-card--blue">
+          <div class="pref-stat-icon">🌶️</div>
+          <div class="pref-stat-value">${Object.keys(spicyCounts).length}</div>
+          <div class="pref-stat-label">辣度档位覆盖</div>
+        </div>
+      </div>
+    `;
+
+    // --- Ring Chart (CSS-only Donut) ---
+    function renderRingChart(data, label, colors) {
+      const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+      if (!entries.length) return '';
+      const total = entries.reduce((sum, [, c]) => sum + c, 0);
+      let cumulative = 0;
+      const segments = entries.map(([name, count], i) => {
+        const pct = (count / total * 100);
+        const start = cumulative;
+        cumulative += pct;
+        return { name, count, pct, start, color: colors[i % colors.length] };
+      });
+
+      const conicGradient = segments.map(s =>
+        `${s.color} ${s.start}% ${s.start + s.pct}%`
+      ).join(', ');
+
+      return `
+        <div class="dash-panel pref-chart-panel">
+          <div class="dash-panel-title">${label}</div>
+          <div class="pref-ring-wrap">
+            <div class="pref-ring" style="background: conic-gradient(${conicGradient});">
+              <div class="pref-ring-hole">
+                <span class="pref-ring-total">${total}</span>
+                <span class="pref-ring-unit">人次</span>
+              </div>
+            </div>
+          </div>
+          <div class="pref-legend">
+            ${segments.map(s => `
+              <div class="pref-legend-item">
+                <span class="pref-legend-dot" style="background:${s.color};"></span>
+                <span class="pref-legend-name">${XF.esc(s.name)}</span>
+                <span class="pref-legend-value">${s.count}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // --- Tag Cloud ---
+    function renderTagCloud(data, label) {
+      const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+      if (!entries.length) return '';
+      const maxCount = entries[0][1];
+      return `
+        <div class="dash-panel pref-chart-panel">
+          <div class="dash-panel-title">${label}</div>
+          <div class="pref-tag-cloud">
+            ${entries.map(([name, count]) => {
+              const size = 1 + (count / maxCount) * 1.6;
+              const opacity = 0.6 + (count / maxCount) * 0.4;
+              return `<span class="pref-cloud-tag" style="font-size:${size.toFixed(1)}rem;opacity:${opacity.toFixed(2)};">${XF.esc(name)}<sup>${count}</sup></span>`;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // --- Simple Bar Chart (kept from before, enhanced) ---
+    function renderBarChart(data, label) {
+      const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+      if (!entries.length) return '';
+      const maxCount = entries[0][1];
+      return `
+        <div class="dash-panel pref-chart-panel">
+          <div class="dash-panel-title">${label}</div>
+          <div class="pref-chart">
+            ${entries.map(([name, count]) => `
+              <div class="pref-chart-row">
+                <span class="pref-chart-label">${XF.esc(name)}</span>
+                <div class="pref-chart-bar-wrap">
+                  <div class="pref-chart-bar" style="--bar-pct:${(count / maxCount * 100).toFixed(1)}%">
+                    <span class="pref-chart-bar-label">${count}人</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Individual student cards (enhanced)
+    const studentCards = userIds.map(uid => {
+      const p = allPrefs[uid];
+      const badgeGroups = [];
+      if ((p.spicyLevel || []).length) badgeGroups.push({ label: '🌶️', items: p.spicyLevel, cls: 'dash-badge--hot' });
+      if ((p.tastes || []).length) badgeGroups.push({ label: '👅', items: p.tastes, cls: '' });
+      if ((p.dietType || []).length) badgeGroups.push({ label: '🥗', items: p.dietType, cls: 'dash-badge--student' });
+      if ((p.allergies || []).length) badgeGroups.push({ label: '⚠️', items: p.allergies, cls: 'dash-badge--pending' });
+      if ((p.cuisines || []).length) badgeGroups.push({ label: '🍜', items: p.cuisines, cls: 'dash-badge--admin' });
+
+      return `
+        <div class="dash-panel pref-student-card">
+          <div class="pref-student-header">
+            <div class="dash-post-avatar dash-post-avatar--student" style="width:3.2rem;height:3.2rem;font-size:1.3rem;">${(p.userName || '?').charAt(0)}</div>
+            <div class="pref-student-meta">
+              <span class="dash-post-name" style="font-size:1.5rem;">${XF.esc(p.userName || uid)}</span>
+              <span class="dash-post-time">${p.updatedAt ? XF.formatTime(p.updatedAt) : '未设置'}</span>
+            </div>
+          </div>
+          <div class="pref-student-badges">
+            ${badgeGroups.map(g => `
+              <div class="pref-badge-group">
+                <span class="pref-badge-group-label">${g.label}</span>
+                ${g.items.map(item => `<span class="dash-badge ${g.cls}" style="font-size:1.05rem;">${XF.esc(item)}</span>`).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const ringColors = ['#d4af37','#e5c151','#c9962f','#b8941f','#a0781e','#8c6215',
+                        '#6366f1','#4f46e5','#7c3aed','#a78bfa','#8b5cf6','#6d28d9',
+                        '#10b981','#059669','#34d399','#047857','#6ee7b7'];
+    const ringColors2 = ['#ef4444','#f59e0b','#f97316','#eab308','#ec4899','#14b8a6',
+                         '#6366f1','#8b5cf6','#06b6d4','#10b981','#84cc16','#f43f5e'];
+
+    container.innerHTML = `
+      ${statCards}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;">
+        ${renderRingChart(cuisineCounts, '菜系偏好 · 环形图', ringColors)}
+        ${renderRingChart(tasteCounts, '口味偏好 · 环形图', ringColors2)}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;">
+        ${renderBarChart(spicyCounts, '辣度偏好分布')}
+        ${renderBarChart(dietCounts, '饮食类型分布')}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;">
+        ${renderTagCloud(cuisineCounts, '菜系热度 · 标签云')}
+        ${renderBarChart(allergyCounts, '过敏食材统计')}
+      </div>
+      <div class="dash-panel">
+        <div class="dash-panel-title">学生个人偏好详情（共 ${userIds.length} 人）</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(30rem,1fr));gap:1.8rem;">
+          ${studentCards}
+        </div>
+      </div>
+    `;
+  }
 
   /* ---------- Initial Render ---------- */
   renderWeeklyMenu();

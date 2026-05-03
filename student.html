@@ -35,6 +35,7 @@
         <button class="stu-nav-btn active" data-section="home">🏠 首页</button>
         <button class="stu-nav-btn" data-section="daily">📅 每日食谱</button>
         <button class="stu-nav-btn" data-section="total">📖 总食谱</button>
+        <button class="stu-nav-btn" data-section="preference">🎯 个性化推荐</button>
         <button class="stu-nav-btn" data-section="forum">💬 论坛</button>
         <button class="stu-nav-btn" data-section="suggest">📝 建议栏</button>
         <button class="stu-nav-btn" data-section="vote">🗳️ 投票</button>
@@ -104,6 +105,97 @@
         <button class="dash-tab" data-meal="dinner">晚餐</button>
       </div>
       <div id="stu-total-menu"></div>
+    </div>
+
+    <!-- ===== 个性化推荐 ===== -->
+    <div class="dash-section" id="section-preference">
+      <h1 class="dash-main-title" style="margin-bottom:2rem;">🎯 个性化用餐推荐</h1>
+
+      <!-- 喜好设置 -->
+      <div class="dash-panel">
+        <div class="dash-panel-title">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          设置你的口味偏好
+        </div>
+
+        <div class="preference-grid">
+          <div class="dash-form-group">
+            <label>辣度偏好 <small style="font-weight:400;text-transform:none;">（单选）</small></label>
+            <div class="preference-tags preference-group--single" id="spicy-level">
+              <button class="preference-tag" data-value="不辣">不辣</button>
+              <button class="preference-tag" data-value="微辣">微辣</button>
+              <button class="preference-tag" data-value="中辣">中辣</button>
+              <button class="preference-tag" data-value="特辣">特辣</button>
+            </div>
+          </div>
+
+          <div class="dash-form-group">
+            <label>口味偏好 <small style="font-weight:400;text-transform:none;">（多选）</small></label>
+            <div class="preference-tags preference-group--multi" id="taste-preferences">
+              <button class="preference-tag" data-value="清淡">清淡</button>
+              <button class="preference-tag" data-value="重口味">重口味</button>
+              <button class="preference-tag" data-value="甜味">甜味</button>
+              <button class="preference-tag" data-value="咸味">咸味</button>
+              <button class="preference-tag" data-value="酸味">酸味</button>
+              <button class="preference-tag" data-value="鲜味">鲜味</button>
+              <button class="preference-tag" data-value="麻味">麻味</button>
+            </div>
+          </div>
+
+          <div class="dash-form-group">
+            <label>饮食类型 <small style="font-weight:400;text-transform:none;">（多选）</small></label>
+            <div class="preference-tags preference-group--multi" id="diet-type">
+              <button class="preference-tag" data-value="荤素搭配">荤素搭配</button>
+              <button class="preference-tag" data-value="偏素食">偏素食</button>
+              <button class="preference-tag" data-value="全素食">全素食</button>
+              <button class="preference-tag" data-value="高蛋白">高蛋白</button>
+              <button class="preference-tag" data-value="低碳水">低碳水</button>
+              <button class="preference-tag" data-value="低脂">低脂</button>
+            </div>
+          </div>
+
+          <div class="dash-form-group">
+            <label>过敏忌口 <small style="font-weight:400;text-transform:none;">（多选）</small></label>
+            <div class="preference-tags preference-group--multi" id="allergies">
+              <button class="preference-tag" data-value="海鲜">海鲜</button>
+              <button class="preference-tag" data-value="花生">花生</button>
+              <button class="preference-tag" data-value="牛奶">牛奶</button>
+              <button class="preference-tag" data-value="鸡蛋">鸡蛋</button>
+              <button class="preference-tag" data-value="大豆">大豆</button>
+              <button class="preference-tag" data-value="小麦">小麦</button>
+              <button class="preference-tag" data-value="坚果">坚果</button>
+            </div>
+          </div>
+
+          <div class="dash-form-group">
+            <label>菜系偏好 <small style="font-weight:400;text-transform:none;">（多选）</small></label>
+            <div class="preference-tags preference-group--multi" id="cuisine-preferences">
+              <button class="preference-tag" data-value="川菜">川菜</button>
+              <button class="preference-tag" data-value="粤菜">粤菜</button>
+              <button class="preference-tag" data-value="湘菜">湘菜</button>
+              <button class="preference-tag" data-value="鲁菜">鲁菜</button>
+              <button class="preference-tag" data-value="淮扬菜">淮扬菜</button>
+              <button class="preference-tag" data-value="东北菜">东北菜</button>
+              <button class="preference-tag" data-value="西北菜">西北菜</button>
+              <button class="preference-tag" data-value="日韩料理">日韩料理</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="dash-btn dash-btn--primary" id="btn-save-preferences" style="margin-top:1.6rem;">
+          <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          保存偏好设置
+        </button>
+      </div>
+
+      <!-- 推荐结果 -->
+      <div class="dash-panel" id="recommendation-panel" style="display:none;">
+        <div class="dash-panel-title">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          为你推荐的用餐规划
+        </div>
+        <div id="recommendation-content"></div>
+      </div>
     </div>
 
     <!-- ===== 论坛 ===== -->

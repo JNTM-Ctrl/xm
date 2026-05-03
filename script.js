@@ -25,42 +25,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
   heroChars.forEach((char, idx) => {
     // Set staggered entrance delay for CSS animation
-    char.style.setProperty('--char-delay', (idx * 0.12) + 's');
+    char.style.setProperty('--char-delay', (idx * 0.08) + 's');
 
-    // Click ripple effect
+    // Click ripple effect with enhanced animation
     char.addEventListener('click', () => {
+      // Use requestAnimationFrame for buttery-smooth replay
       char.style.animation = 'none';
-      char.offsetHeight;
-      char.style.animation = 'charClickBurst 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          char.style.animation = 'charClickBurst 0.65s cubic-bezier(0.22,0.61,0.36,1)';
+        });
+      });
       const ripple = document.createElement('div');
       ripple.className = 'char-ripple';
       char.appendChild(ripple);
-      setTimeout(() => ripple.remove(), 600);
+      setTimeout(() => ripple.remove(), 650);
     });
 
     if (supportsHover) {
-      char.addEventListener('mouseenter', () => {
-        const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
-        char.style.fontFamily = randomFont;
+      let hoverTimeout;
+      let rafId;
 
-        heroChars.forEach((sibling, sIdx) => {
-          if (sIdx === idx) return;
-          const distance = Math.abs(sIdx - idx);
-          const pushPx = Math.max(15, 80 - distance * 20);
-          sibling.style.setProperty('--push-distance', pushPx + 'px');
-          sibling.classList.add('pushed');
-          if (sIdx < idx) {
-            sibling.classList.add('pushed-left');
-            sibling.classList.remove('pushed-right');
-          } else {
-            sibling.classList.add('pushed-right');
-            sibling.classList.remove('pushed-left');
-          }
+      char.addEventListener('mouseenter', () => {
+        clearTimeout(hoverTimeout);
+        if (rafId) cancelAnimationFrame(rafId);
+
+        rafId = requestAnimationFrame(() => {
+          const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
+          char.style.fontFamily = randomFont;
+
+          heroChars.forEach((sibling, sIdx) => {
+            if (sIdx === idx) return;
+            const distance = Math.abs(sIdx - idx);
+            // Curved easing based on distance
+            const rawPx = 65 - distance * 16;
+            const pushPx = Math.max(10, Math.round(rawPx));
+
+            sibling.style.setProperty('--push-distance', pushPx + 'px');
+            sibling.classList.add('pushed');
+
+            if (sIdx < idx) {
+              sibling.classList.add('pushed-left');
+              sibling.classList.remove('pushed-right');
+            } else {
+              sibling.classList.add('pushed-right');
+              sibling.classList.remove('pushed-left');
+            }
+          });
         });
       });
 
       char.addEventListener('mouseleave', () => {
-        char.style.fontFamily = '';
+        hoverTimeout = setTimeout(() => {
+          char.style.fontFamily = '';
+        }, 120);
+
+        if (rafId) cancelAnimationFrame(rafId);
         heroChars.forEach(sibling => {
           sibling.classList.remove('pushed', 'pushed-left', 'pushed-right');
         });
@@ -69,10 +89,22 @@ document.addEventListener('DOMContentLoaded', () => {
       char.addEventListener('touchstart', (e) => {
         e.preventDefault();
         char.style.animation = 'none';
-        char.offsetHeight;
-        char.style.animation = 'charClickBurst 0.6s cubic-bezier(0.34,1.56,0.64,1)';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            char.style.animation = 'charClickBurst 0.65s cubic-bezier(0.22,0.61,0.36,1)';
+          });
+        });
         const randomFont = funFonts[Math.floor(Math.random() * funFonts.length)];
         char.style.fontFamily = randomFont;
+
+        const ripple = document.createElement('div');
+        ripple.className = 'char-ripple';
+        char.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 650);
+
+        setTimeout(() => {
+          char.style.fontFamily = '';
+        }, 1000);
       });
     }
   });

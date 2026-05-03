@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'home': renderHome(); break;
       case 'daily': renderDaily(); break;
       case 'total': renderTotal(); break;
+      case 'preference': renderPreference(); break;
       case 'forum': renderForum(); break;
       case 'suggest': renderSuggestions(); break;
       case 'vote': renderVote(); break;
@@ -544,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="dash-vote-name">${XF.esc(dish.name)}</span>
                 <span class="dash-vote-count">${dish.votes} 票</span>
                 ${v.active ? `
-                  <button class="dash-btn ${voted ? 'dash-btn--secondary' : 'dash-btn--primary'} dash-btn--sm btn-cast-vote" 
+                  <button class="dash-btn ${voted ? 'dash-btn--secondary' : 'dash-btn--primary'} dash-btn--sm btn-cast-vote"
                     data-id="${dish.id}" ${voted ? 'disabled' : ''}>
                     ${voted ? '✓ 已投' : '投票'}
                   </button>
@@ -567,6 +568,305 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+  }
+
+  /* ============================================
+     PREFERENCE & RECOMMENDATION
+     ============================================ */
+  function renderPreference() {
+    // Load saved preferences
+    const prefs = XF.getUserPreferences(user.id) || {
+      spicyLevel: [],
+      tastes: [],
+      dietType: [],
+      allergies: [],
+      cuisines: []
+    };
+
+    // Set active states in next microtask (after DOM)
+    setTimeout(() => {
+      (prefs.spicyLevel || []).forEach(v => {
+        const btn = document.querySelector(`#spicy-level .preference-tag[data-value="${v}"]`);
+        if (btn) btn.classList.add('active');
+      });
+      (prefs.tastes || []).forEach(t => {
+        const btn = document.querySelector(`#taste-preferences .preference-tag[data-value="${t}"]`);
+        if (btn) btn.classList.add('active');
+      });
+      (prefs.dietType || []).forEach(d => {
+        const btn = document.querySelector(`#diet-type .preference-tag[data-value="${d}"]`);
+        if (btn) btn.classList.add('active');
+      });
+      (prefs.allergies || []).forEach(a => {
+        const btn = document.querySelector(`#allergies .preference-tag[data-value="${a}"]`);
+        if (btn) btn.classList.add('active');
+      });
+      (prefs.cuisines || []).forEach(c => {
+        const btn = document.querySelector(`#cuisine-preferences .preference-tag[data-value="${c}"]`);
+        if (btn) btn.classList.add('active');
+      });
+
+      // Show recommendations if preferences exist
+      const hasPrefs = (prefs.spicyLevel || []).length ||
+                       (prefs.tastes || []).length ||
+                       (prefs.dietType || []).length ||
+                       (prefs.cuisines || []).length;
+      if (hasPrefs) {
+        generateRecommendations(prefs);
+      }
+    }, 50);
+
+    // Bind preference tag clicks with group-aware logic
+    document.querySelectorAll('.preference-tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const parent = tag.closest('.preference-tags');
+        const isSingle = parent.classList.contains('preference-group--single');
+
+        if (isSingle) {
+          // Radio-group: only one active
+          const wasActive = tag.classList.contains('active');
+          parent.querySelectorAll('.preference-tag').forEach(t => t.classList.remove('active'));
+          if (!wasActive) tag.classList.add('active');
+        } else {
+          // Multi-select toggle
+          tag.classList.toggle('active');
+        }
+      });
+    });
+  }
+
+  document.getElementById('btn-save-preferences').addEventListener('click', () => {
+    const spicyLevel = Array.from(document.querySelectorAll('#spicy-level .preference-tag.active')).map(t => t.dataset.value);
+    const tastes = Array.from(document.querySelectorAll('#taste-preferences .preference-tag.active')).map(t => t.dataset.value);
+    const dietType = Array.from(document.querySelectorAll('#diet-type .preference-tag.active')).map(t => t.dataset.value);
+    const allergies = Array.from(document.querySelectorAll('#allergies .preference-tag.active')).map(t => t.dataset.value);
+    const cuisines = Array.from(document.querySelectorAll('#cuisine-preferences .preference-tag.active')).map(t => t.dataset.value);
+
+    if (!spicyLevel.length && !tastes.length && !dietType.length && !cuisines.length) {
+      XF.toast('请至少选择一项偏好', 'error');
+      return;
+    }
+
+    const prefs = { spicyLevel, tastes, dietType, allergies, cuisines };
+    XF.saveUserPreferences(user.id, user.name, prefs);
+    XF.toast('偏好设置已保存！');
+
+    generateRecommendations(prefs);
+  });
+
+  /* ---------- Restaurant Recommendation Engine ---------- */
+  function generateRecommendations(prefs) {
+    const menu = XF.getTotalMenu();
+    const recommendations = { breakfast: [], lunch: [], dinner: [] };
+    const allDishes = [];
+
+    // Keyword-to-preference mapping with weighted scores
+    const spicyKeywords = {
+      '不辣': { keywords: [], conflicting: ['辣', '麻辣'], weight: 10 },
+      '微辣': { keywords: ['微辣', '青椒', '泡椒', '小辣'], conflicting: [], weight: 20 },
+      '中辣': { keywords: ['辣', '香辣', '辣子'], conflicting: ['麻辣', '爆辣', '特辣'], weight: 25 },
+      '特辣': { keywords: ['麻辣', '爆辣', '特辣', '重辣', '火锅'], conflicting: [], weight: 25 }
+    };
+
+    const tasteKeywords = {
+      '清淡':   { keywords: ['清蒸', '白灼', '炖', '煲', '粥', '清汤', '水煮'], weight: 18, bonus: ['时蔬', '豆腐', '菌', '番茄', '蒸'] },
+      '重口味': { keywords: ['红烧', '爆炒', '油焖', '干锅', '回锅', '酱'], weight: 18, bonus: ['肉', '炸', '烧', '烤'] },
+      '甜味':   { keywords: ['糖醋', '甜', '蜜汁', '拔丝', '叉烧'], weight: 15, bonus: ['糖', '甜', '蜜'] },
+      '咸味':   { keywords: ['腌', '卤', '熏', '腊', '酱'], weight: 13, bonus: ['盐', '咸', '卤'] },
+      '酸味':   { keywords: ['酸', '醋', '柠檬', '泡菜', '酸辣'], weight: 15, bonus: ['酸', '醋'] },
+      '鲜味':   { keywords: ['鲜', '虾', '蟹', '蛤', '鱼', '高汤', '菌'], weight: 16, bonus: ['鲜', '虾', '蟹'] },
+      '麻味':   { keywords: ['麻', '花椒', '藤椒', '椒麻'], weight: 16, bonus: ['麻', '椒'] }
+    };
+
+    const dietKeywords = {
+      '荤素搭配': { keywords: [], baseWeight: 8 },
+      '偏素食':   { keywords: ['豆腐', '时蔬', '菌', '菜', '蔬', '茄子', '土豆', '藕'], boostWeight: 18, penalty: ['排骨', '牛腩', '鸡', '鱼', '虾', '蟹', '猪', '肉'] },
+      '全素食':   { keywords: ['豆腐', '时蔬', '菌', '菜', '蔬', '茄子', '土豆', '藕', '面筋'], boostWeight: 25, penalty: ['肉', '鱼', '虾', '蟹', '鸡', '鸭', '蛋', '排骨', '牛'] },
+      '高蛋白':   { keywords: ['鸡', '牛', '鱼', '虾', '蛋', '豆', '奶', '肉'], boostWeight: 15, penalty: [] },
+      '低碳水':   { keywords: [], boostWeight: 8, penalty: ['米饭', '面', '粉', '馒头', '粥', '饼'] },
+      '低脂':     { keywords: ['蒸', '煮', '清', '凉拌', '白灼', '时蔬'], boostWeight: 12, penalty: ['炸', '红烧', '油焖', '回锅', '肥', '猪油'] }
+    };
+
+    const cuisineKeywords = {
+      '川菜': { keywords: ['川', '麻辣', '水煮', '回锅', '鱼香', '宫保', '担担', '火锅', '红油'], weight: 22 },
+      '粤菜': { keywords: ['粤', '煲', '蒸', '白灼', '清蒸', '叉烧', '烧腊', '虾饺'], weight: 22 },
+      '湘菜': { keywords: ['湘', '剁椒', '腊肉', '干锅', '小炒', '辣'], weight: 20 },
+      '鲁菜': { keywords: ['鲁', '葱烧', '扒', '九转', '糖醋', '爆炒'], weight: 18 },
+      '淮扬菜': { keywords: ['淮扬', '狮子头', '大煮', '文思', '水晶', '蟹粉', '清炖'], weight: 18 },
+      '东北菜': { keywords: ['东北', '锅包', '乱炖', '溜', '大拉皮', '小鸡炖', '地三鲜'], weight: 18 },
+      '西北菜': { keywords: ['西北', '羊肉', '拉面', '大盘', '肉夹', '凉皮', '烤'], weight: 16 },
+      '日韩料理': { keywords: ['日', '韩', '寿司', '石锅', '泡菜', '照烧', '味噌', '大酱', '刺身'], weight: 16 }
+    };
+
+    // Flatten all dishes
+    ['breakfast', 'lunch', 'dinner'].forEach(meal => {
+      (menu[meal] || []).forEach(dish => {
+        allDishes.push({ ...dish, mealType: meal });
+      });
+    });
+
+    allDishes.forEach(dish => {
+      let score = 30; // base score
+      let reasons = [];
+
+      // ---- Spicy Level Matching ----
+      (prefs.spicyLevel || []).forEach(level => {
+        const spec = spicyKeywords[level];
+        if (!spec) return;
+        const hasConflict = spec.conflicting.some(kw => dish.name.includes(kw));
+        if (level === '不辣') {
+          // "Not spicy": score dishes that DON'T contain any spicy keywords
+          const allSpicyKeys = Object.values(spicyKeywords).flatMap(s => s.keywords || []);
+          const hasSpicy = allSpicyKeys.some(kw => dish.name.includes(kw));
+          if (!hasSpicy) {
+            score += spec.weight;
+            reasons.push('清淡不辣');
+          }
+        } else if (!hasConflict) {
+          const matched = spec.keywords.some(kw => dish.name.includes(kw));
+          if (matched || level === '不辣') {
+            score += spec.weight;
+            reasons.push(`${level}口味`);
+          }
+        }
+      });
+
+      // ---- Taste Matching ----
+      (prefs.tastes || []).forEach(taste => {
+        const spec = tasteKeywords[taste];
+        if (!spec) return;
+        const primary = spec.keywords.some(kw => dish.name.includes(kw));
+        const extra = (spec.bonus || []).some(kw => dish.name.includes(kw));
+        if (primary) {
+          score += spec.weight;
+          reasons.push(`符合${taste}偏好`);
+        } else if (extra) {
+          score += Math.floor(spec.weight * 0.4);
+        }
+      });
+
+      // ---- Diet Type Matching ----
+      (prefs.dietType || []).forEach(diet => {
+        const spec = dietKeywords[diet];
+        if (!spec) return;
+        const hasPenalty = (spec.penalty || []).some(kw => dish.name.includes(kw));
+        const hasBoost = (spec.keywords || []).some(kw => dish.name.includes(kw));
+
+        if (hasPenalty) {
+          score -= spec.boostWeight || 10;
+          reasons.push(`不适合${diet}`);
+        } else if (hasBoost) {
+          score += spec.boostWeight || 10;
+          if (spec.baseWeight) score += spec.baseWeight;
+          reasons.push(`符合${diet}`);
+        } else if (spec.baseWeight) {
+          score += spec.baseWeight;
+        }
+      });
+
+      // ---- Cuisine Matching ----
+      (prefs.cuisines || []).forEach(cuisine => {
+        const spec = cuisineKeywords[cuisine];
+        if (!spec) return;
+        const matched = spec.keywords.some(kw => dish.name.includes(kw));
+        if (matched) {
+          score += spec.weight;
+          reasons.push(`${cuisine}风味`);
+        }
+      });
+
+      // ---- Allergy Filter ----
+      let allergic = false;
+      (prefs.allergies || []).forEach(allergy => {
+        if (dish.name.includes(allergy)) {
+          allergic = true;
+          score = -999;
+          reasons = [`含${allergy}，已排除`];
+        }
+      });
+
+      // ---- Popularity Weighting ----
+      if (!allergic && score > 0) {
+        const likeCount = (dish.likes || []).length;
+        const commentCount = (dish.comments || []).length;
+        score += Math.min(likeCount * 3, 15);        // cap +15 from likes
+        score += Math.min(commentCount * 2, 10);     // cap +10 from comments
+        if (likeCount > 0) reasons.unshift(`👍${likeCount}`);
+      }
+
+      // Deduplicate reasons
+      const uniqueReasons = [...new Set(reasons)];
+
+      if (score > 0) {
+        dish.score = score;
+        dish.reasons = uniqueReasons.length ? uniqueReasons : ['营养均衡'];
+        dish.matchPercentage = Math.min(100, Math.round(score));
+      }
+    });
+
+    // Assign to meal groups (top 5 per meal)
+    ['breakfast', 'lunch', 'dinner'].forEach(meal => {
+      const candidates = allDishes
+        .filter(d => d.mealType === meal && d.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+      recommendations[meal] = candidates;
+    });
+
+    displayRecommendations(recommendations);
+  }
+
+  function displayRecommendations(recommendations) {
+    const panel = document.getElementById('recommendation-panel');
+    const container = document.getElementById('recommendation-content');
+
+    const mealIcons = { breakfast: '🌅', lunch: '☀️', dinner: '🌙' };
+    const mealNames = { breakfast: '早餐', lunch: '午餐', dinner: '晚餐' };
+
+    let html = '';
+    ['breakfast', 'lunch', 'dinner'].forEach(meal => {
+      const dishes = recommendations[meal];
+      if (dishes.length) {
+        html += `
+          <div class="recommendation-meal-section">
+            <div class="recommendation-meal-title">${mealIcons[meal]} ${mealNames[meal]} · 为你精选</div>
+            <div class="recommendation-dishes">
+              ${dishes.map((dish, idx) => {
+                const matchColor = dish.matchPercentage >= 80 ? '#10b981' :
+                                   dish.matchPercentage >= 60 ? '#f59e0b' : '#6366f1';
+                return `
+                  <div class="recommendation-dish-card" style="animation-delay:${idx * 0.06}s">
+                    <div class="recommendation-dish-name">
+                      ${idx === 0 ? '<span class="rec-top-badge">最佳匹配</span> ' : ''}${XF.esc(dish.name)}
+                    </div>
+                    <div class="recommendation-dish-reason">
+                      <div class="rec-reason-list">
+                        ${dish.reasons.map(r => `<span class="rec-reason-bubble">${XF.esc(r)}</span>`).join('')}
+                      </div>
+                    </div>
+                    <div class="recommendation-match-score" style="color:${matchColor};border-color:${matchColor}30;background:${matchColor}10;">
+                      <svg viewBox="0 0 24 24" width="14" height="14" style="fill:${matchColor};"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      匹配度 ${dish.matchPercentage}%
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    if (html) {
+      container.innerHTML = html;
+      panel.style.display = 'block';
+      // Scroll to recommendations after render
+      setTimeout(() => {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 200);
+    } else {
+      panel.style.display = 'none';
+    }
   }
 
   /* ---------- Initial Render ---------- */

@@ -150,19 +150,25 @@
   position: relative;
   overflow: hidden;
   margin-bottom: 2.4rem;
-  padding: 0.8rem 0;
-  background: linear-gradient(180deg, var(--bg) 0%, rgba(212,175,55,.03) 50%, var(--bg) 100%);
-  border-radius: 1.6rem;
-  border: 1px solid var(--border);
+  padding: 1.2rem 0;
+  background: linear-gradient(180deg,
+    var(--bg) 0%,
+    rgba(212,175,55,.04) 25%,
+    rgba(183,110,121,.03) 50%,
+    rgba(212,175,55,.04) 75%,
+    var(--bg) 100%);
+  border-radius: 1.8rem;
+  border: 1px solid rgba(212,175,55,.1);
+  box-shadow: inset 0 2px 8px rgba(212,175,55,.05);
 }
 
 .barrage-track {
   display: flex;
-  height: 3.2rem;
+  height: 3.4rem;
   align-items: center;
   overflow: hidden;
   position: relative;
-  margin: 0.5rem 0;
+  margin: 0.6rem 0;
 }
 
 .barrage-track::before,
@@ -171,17 +177,17 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 4rem;
+  width: 6rem;
   z-index: 2;
   pointer-events: none;
 }
 .barrage-track::before {
   left: 0;
-  background: linear-gradient(90deg, var(--bg) 0%, transparent 100%);
+  background: linear-gradient(90deg, var(--bg) 0%, rgba(212,175,55,.02) 50%, transparent 100%);
 }
 .barrage-track::after {
   right: 0;
-  background: linear-gradient(270deg, var(--bg) 0%, transparent 100%);
+  background: linear-gradient(270deg, var(--bg) 0%, rgba(212,175,55,.02) 50%, transparent 100%);
 }
 
 .barrage-track:hover .barrage-inner {
@@ -190,7 +196,7 @@
 
 .barrage-inner {
   display: flex;
-  gap: 2rem;
+  gap: 2.4rem;
   white-space: nowrap;
   will-change: transform;
   animation: barrageScroll var(--barrage-dur, 30s) linear infinite;
@@ -204,83 +210,104 @@
 .barrage-item {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 1.4rem;
+  gap: 0.7rem;
+  padding: 0.6rem 1.6rem;
   border-radius: 10rem;
   font-size: 1.3rem;
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--border);
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
   cursor: default;
-  animation: itemGlow 3s ease-in-out infinite;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+}
+
+.barrage-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10rem;
+  background: linear-gradient(135deg, rgba(255,255,255,.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .barrage-item:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.15);
   z-index: 5;
 }
 
-@keyframes itemGlow {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.05); }
+.barrage-item:hover::before {
+  opacity: 1;
 }
 
-/* Barrage accent colors */
+/* Barrage accent colors with enhanced gradients */
 .barrage-item--hot {
-  background: rgba(239,68,68,.08);
-  border-color: rgba(239,68,68,.2);
+  background: linear-gradient(135deg, rgba(239,68,68,.1), rgba(245,158,11,.08));
+  border-color: rgba(239,68,68,.25);
   color: #ef4444;
+  animation: hotPulse 2s ease-in-out infinite;
 }
+
+@keyframes hotPulse {
+  0%, 100% { box-shadow: 0 2px 6px rgba(239,68,68,.15); }
+  50% { box-shadow: 0 4px 12px rgba(239,68,68,.3); }
+}
+
 .barrage-item--like {
-  background: rgba(212,175,55,.08);
-  border-color: rgba(212,175,55,.25);
+  background: linear-gradient(135deg, rgba(212,175,55,.1), rgba(229,193,81,.08));
+  border-color: rgba(212,175,55,.3);
   color: var(--accent);
 }
+
 .barrage-item--comment {
-  background: rgba(6,182,212,.08);
-  border-color: rgba(6,182,212,.2);
+  background: linear-gradient(135deg, rgba(6,182,212,.1), rgba(14,165,233,.08));
+  border-color: rgba(6,182,212,.25);
   color: #06b6d4;
 }
+
 .barrage-item--notice {
-  background: rgba(16,185,129,.08);
-  border-color: rgba(16,185,129,.2);
+  background: linear-gradient(135deg, rgba(16,185,129,.1), rgba(5,150,105,.08));
+  border-color: rgba(16,185,129,.25);
   color: #10b981;
 }
+
 .barrage-item--forum {
-  background: rgba(99,102,241,.08);
-  border-color: rgba(99,102,241,.2);
+  background: linear-gradient(135deg, rgba(99,102,241,.1), rgba(79,70,229,.08));
+  border-color: rgba(99,102,241,.25);
   color: #6366f1;
 }
 
 [data-theme="dark"] .barrage-item--hot {
-  background: rgba(239,68,68,.12);
+  background: linear-gradient(135deg, rgba(239,68,68,.15), rgba(245,158,11,.12));
   color: #f87171;
 }
 [data-theme="dark"] .barrage-item--like {
-  background: rgba(229,193,81,.12);
+  background: linear-gradient(135deg, rgba(229,193,81,.15), rgba(212,175,55,.12));
   color: #e5c151;
 }
 [data-theme="dark"] .barrage-item--comment {
-  background: rgba(6,182,212,.12);
+  background: linear-gradient(135deg, rgba(6,182,212,.15), rgba(14,165,233,.12));
   color: #22d3ee;
 }
 [data-theme="dark"] .barrage-item--notice {
-  background: rgba(16,185,129,.12);
+  background: linear-gradient(135deg, rgba(16,185,129,.15), rgba(5,150,105,.12));
   color: #34d399;
 }
 [data-theme="dark"] .barrage-item--forum {
-  background: rgba(99,102,241,.12);
+  background: linear-gradient(135deg, rgba(99,102,241,.15), rgba(79,70,229,.12));
   color: #818cf8;
 }
 
 .barrage-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.1));
 }
 
 /* Mobile tweaks */
@@ -296,3 +323,165 @@
   .barrage-stage { margin: 0 -0.5rem 1.6rem; border-radius: 1rem; }
 }
 
+/* ============================================
+   Preference System
+   ============================================ */
+.preference-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.preference-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.preference-tag {
+  padding: 0.8rem 1.8rem;
+  border-radius: 10rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  color: var(--text-secondary);
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.preference-tag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212,175,55,.15), rgba(183,110,121,.1));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.preference-tag:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212,175,55,.15);
+}
+
+.preference-tag:hover::before {
+  opacity: 0.5;
+}
+
+.preference-tag.active {
+  background: linear-gradient(135deg, var(--accent), #c9962f);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(212,175,55,.3), inset 0 1px 0 rgba(255,255,255,.2);
+  transform: translateY(-2px);
+}
+
+.preference-tag.active::before {
+  opacity: 0;
+}
+
+.recommendation-meal-section {
+  margin-bottom: 2.4rem;
+}
+
+.recommendation-meal-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text);
+}
+
+.recommendation-dishes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: 1.6rem;
+}
+
+.recommendation-dish-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 1.4rem;
+  padding: 1.8rem;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.recommendation-dish-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), rgba(212,175,55,.3), transparent);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.recommendation-dish-card:hover {
+  border-color: rgba(212,175,55,.35);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(212,175,55,.12);
+}
+
+.recommendation-dish-card:hover::before {
+  opacity: 1;
+}
+
+.rec-top-badge {
+  display: inline-block;
+  padding: 0.2rem 0.8rem;
+  border-radius: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #c9962f);
+  color: #fff;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+  box-shadow: 0 2px 8px rgba(212,175,55,.25);
+}
+
+.rec-reason-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rec-reason-bubble {
+  display: inline-block;
+  padding: 0.25rem 0.9rem;
+  border-radius: 10rem;
+  font-size: 1.15rem;
+  font-weight: 500;
+  background: rgba(99,102,241,.07);
+  color: #6366f1;
+  border: 1px solid rgba(99,102,241,.18);
+  white-space: nowrap;
+}
+
+.recommendation-dish-reason {
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.recommendation-match-score {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 10rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  border: 1px solid;
+}
